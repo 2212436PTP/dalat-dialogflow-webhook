@@ -1,32 +1,162 @@
+// server.js (ESM)
+// Webhook cho Dialogflow ES – Du lịch Đà Lạt
+// by you + assistant :)
+
 import express from "express";
 import bodyParser from "body-parser";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ----------------------------------------------------
+// Paths & config
+// ----------------------------------------------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_PATH = process.env.DATA_PATH || path.join(__dirname, "data.json");
+const PORT = process.env.PORT || 10000;
 
 const app = express();
 app.use(bodyParser.json());
 
-// Kiểm tra server chạy
-app.get("/", (req, res) => res.send("✅ Webhook is running"));
+// ----------------------------------------------------
+// Utils
+// ----------------------------------------------------
+const vnNormalize = (s = "") =>
+  s
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 
-// Chuẩn trả lời Dialogflow
-const reply = (msg) => ({
-  fulfillmentMessages: [{ text: { text: [msg] } }]
+const replyText = (text) => ({
+  fulfillmentText: text,
+  fulfillmentMessages: [{ text: { text: [text] } }],
 });
 
-// Xử lý webhook
+// Tìm key gần đúng trong object theo chuỗi truy vấn (bỏ dấu, không phân biệt hoa thường)
+function findBestKey(obj, query) {
+  if (!obj || !query) return null;
+  const q = vnNormalize(query);
+  const keys = Object.keys(obj);
+  // ưu tiên khớp chính xác trước
+  for (const k of keys) if (vnNormalize(k) === q) return k;
+  // sau đó khớp chứa
+  for (const k of keys) if (vnNormalize(k).includes(q) || q.includes(vnNormalize(k))) return k;
+  return null;
+}
+
+// ----------------------------------------------------
+// Load dữ liệu
+// ----------------------------------------------------
+let DATA = {
+  opening_hours: {},
+  ticket_price: {},
+  food_recommendation: {},
+  find_place: {},
+};
+
+function loadData() {
+  try {
+    const raw = fs.readFileSync(DATA_PATH, "utf8");
+    DATA = JSON.parse(raw);
+    console.log(`✅ Loaded data.json (${Object.keys(DATA).join(", ")})`);
+  } catch (e) {
+    console.error("❌ Cannot load data.json:", e.message);
+  }
+}
+loadData();
+
+// (Tuỳ chọn) hot-reload dữ liệu: gọi GET /reload (nên bảo vệ bằng env SECRET nếu dùng thật)
+app.get("/reload", (_req, res) => {
+  loadData();
+  res.send("Data reloaded");
+});
+
+// ----------------------------------------------------
+// Health check
+// ----------------------------------------------------
+app.get("/", (_req, res) => res.send("✅ Webhook is running"));
+app.get("/health", (_req, res) => res.json({ ok: true, ts: Date.now() }));
+
+// ----------------------------------------------------
+// Dialogflow Webhook
+// ----------------------------------------------------
 app.post("/webhook", (req, res) => {
-  const intent = req.body?.queryResult?.intent?.displayName || "";
-  const p = req.body?.queryResult?.parameters || {};
+  try {
+    const result = req.body?.queryResult || {};
+    const intent = result?.intent?.displayName || "";
+    const p = result?.parameters || {};
+    console.log("➡️  Intent:", intent, "| Params:", p);
 
-  if (intent === "opening_hours") {
-    return res.json(reply(`⏰ ${p.place_name || "địa điểm"} mở cửa: 07:00 - 17:00 (demo)`));
+    // Trả lời theo intent
+    switch (intent) {
+      case "Default Welcome Intent": {
+        const msg =
+          "Xin chào 👋 Mình là trợ lý du lịch Đà Lạt.Mình có thể giúp gì trong trải nghiệm ở Đà Lạt của bạn?";
+        return res.json(replyText(msg));
+      }
+
+      case "opening_hours": {
+        const placeRaw = p.place_name || "";
+        const key = findBestKey(DATA.opening_hours, placeRaw);
+        if (key) {
+          return res.json(replyText(`⏰ ${key} mở cửa: ${DATA.opening_hours[key]}.`));
+        }
+        return res.json(replyText(`Mình chưa có giờ mở cửa của “${placeRaw}”.`));
+      }
+
+      case "ticket_price": {
+        const placeRaw = p.place_name || "";
+        const key = findBestKey(DATA.ticket_price, placeRaw);
+        if (key) {
+          return res.json(replyText(`🎫 Giá vé ${key}: ${DATA.ticket_price[key]}.`));
+        }
+        return res.json(replyText(`Mình chưa có giá vé của “${placeRaw}”.`));
+      }
+
+      case "find_place": {
+        // place_type là text (ví dụ: "cà phê", "homestay", "thác", "chợ", "check-in")
+        const typeRaw = p.place_type || "";
+        const key = findBestKey(DATA.find_place, typeRaw);
+        if (key) {
+          const list = DATA.find_place[key] || [];
+          if (list.length) {
+            const msg =
+              `Gợi ý ${key} nổi bật ở Đà Lạt:\n` +
+              list.slice(0, 10).map((x) => `• ${x}`).join("\n");
+            return res.json(replyText(msg));
+          }
+        }
+        return res.json(replyText(`Chưa tìm được gợi ý phù hợp cho “${typeRaw}”.`));
+      }
+
+      case "food_recommendation": {
+        const foodRaw = p.food_name || "";
+        const key = findBestKey(DATA.food_recommendation, foodRaw);
+        if (key) {
+          return res.json(replyText(DATA.food_recommendation[key]));
+        }
+        const fallback =
+          "Bạn có thể thử bánh căn, bánh tráng nướng, lẩu gà lá é, nem nướng hoặc kem bơ – đặc sản Đà Lạt.";
+        return res.json(replyText(fallback));
+      }
+
+      default: {
+        return res.json(replyText("Mình đã nhận yêu cầu, bạn mô tả rõ hơn nhé."));
+      }
+    }
+  } catch (err) {
+    console.error("❌ Webhook error:", err);
+    return res.json(replyText("Có lỗi xảy ra khi xử lý yêu cầu. Bạn thử lại giúp mình nhé!"));
   }
-
-  if (intent === "ticket_price") {
-    return res.json(reply(`🎫 Vé ${p.place_name || "địa điểm"}: 50.000đ (demo)`));
-  }
-
-  return res.json(reply(`Webhook đã nhận intent: ${intent}`));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("🚀 Webhook listening on port " + PORT));
+// ----------------------------------------------------
+// Start server
+// ----------------------------------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Webhook listening on port ${PORT}`);
+  console.log(`📄 Using data: ${DATA_PATH}`);
+});

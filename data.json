@@ -1,0 +1,88 @@
+{
+  "opening_hours": {
+    "Langbiang": "7:00 - 17:00",
+    "Thung lũng Tình Yêu": "7:30 - 17:30",
+    "Lumiere": "8:00 - 22:00",
+    "Quảng trường Lâm Viên": "Cả ngày",
+    "Vườn hoa thành phố": "7:30 - 17:00",
+    "Thác Datanla": "7:00 - 17:00",
+    "Thác Pongour": "7:00 - 17:00",
+    "Thác Prenn": "7:00 - 17:00",
+    "Đường hầm đất sét": "8:00 - 17:00",
+    "Thác Cam Ly": "7:00 - 17:00",
+    "Thác Elephant": "7:00 - 17:00",
+    "Đồi chè Cầu Đất": "6:00 - 18:00",
+    "Vườn ánh sáng Lumiere": "8:00 - 22:00",
+    "Ga Đà Lạt": "7:00 - 17:00",
+    "Nhà thờ Con Gà": "5:00 - 18:00"
+  },
+  "ticket_price": {
+    "Langbiang": "50.000đ / người",
+    "Thung lũng Tình Yêu": "250.000đ / người",
+    "Lumiere": "150.000đ / người lớn",
+    "Vườn hoa thành phố": "40.000đ / người",
+    "Thác Datanla": "50.000đ / người",
+    "Thác Pongour": "20.000đ / người",
+    "Thác Prenn": "30.000đ / người",
+    "Đường hầm đất sét": "60.000đ / người",
+    "Đồi chè Cầu Đất": "Miễn phí",
+    "Quảng trường Lâm Viên": "Miễn phí",
+    "Ga Đà Lạt": "5.000đ / người",
+    "Nhà thờ Con Gà": "Miễn phí"
+  },
+  "food_recommendation": {
+    "bánh căn": "Bạn có thể ăn bánh căn ở quán Bà Phúc (7 Tăng Bạt Hổ).",
+    "bánh tráng nướng": "Nổi tiếng nhất là bánh tráng nướng Bà Khùng (Nguyễn Văn Trỗi).",
+    "lẩu gà lá é": "Bạn nên thử ở Tao Ngộ (đường 3/4).",
+    "nem nướng": "Nem nướng Bà Hùng là thương hiệu nổi tiếng.",
+    "bánh ướt lòng gà": "Quán Long (Hẻm Hòa Bình) là nơi được nhiều người review.",
+    "kem bơ": "Kem bơ Thanh Thảo là lựa chọn nổi tiếng.",
+    "sữa đậu nành": "Bạn nên uống ở Chợ Đêm hoặc quán Hoa Sữa.",
+    "ốc nhồi thịt": "Quán 33 Hai Bà Trưng là nổi tiếng nhất.",
+    "bánh mì xíu mại": "Bạn nên ăn ở Hoàng Diệu hoặc số 26 Hoàng Diệu.",
+    "chè hé": "Quán chè Hé đường 3/2 nổi tiếng vì chỉ mở buổi tối.",
+    "chè thái": "Ngon nhất ở quán Chè Thái Bà Triệu.",
+    "lẩu bò": "Quán lẩu bò Ba Toa – Nhà gỗ.",
+    "mì Quảng": "Bạn có thể ăn ở Mì Quảng Hội An – đường Bùi Thị Xuân."
+  },
+  "find_place": {
+    "cà phê": [
+      "Mê Linh Coffee Garden",
+      "Cafe Túi Mơ To",
+      "Cafe Horizon",
+      "Cafe An",
+      "Cafe Kokoro",
+      "Cafe F cánh đồng hoa",
+      "Cafe Panorama"
+    ],
+    "homestay": [
+      "Là Nhà Homestay",
+      "Dalat De Charme Village",
+      "The Wilder-nest",
+      "Yên’s House",
+      "Lengkeng Homestay",
+      "Moonrise Garden",
+      "Homestay Gió"
+    ],
+    "thác": [
+      "Thác Datanla",
+      "Thác Pongour",
+      "Thác Prenn",
+      "Thác Cam Ly",
+      "Thác Elephant"
+    ],
+    "chợ": [
+      "Chợ Đà Lạt",
+      "Chợ đêm Đà Lạt",
+      "Chợ Âm Phủ"
+    ],
+    "check-in": [
+      "Quảng trường Lâm Viên",
+      "Vườn hoa thành phố",
+      "Đồi chè Cầu Đất",
+      "Cầu Vàng Đà Lạt",
+      "Ga Đà Lạt",
+      "Nhà thờ Con Gà"
+    ]
+  }
+}

@@ -143,6 +143,36 @@ app.post("/webhook", (req, res) => {
         return res.json(replyText(fallback));
       }
 
+      case "plan_itinerary": {
+        const duration = (p.duration || "").toString();
+        const budget = (p.budget || "vừa phải").toString();
+        const interests = p.interests || []; // mảng
+
+        // Lấy key chính xác/ gần đúng
+        const durKey = findBestKey(DATA.itineraries || {}, duration);
+        let budKey = "vừa phải";
+        if (DATA.itineraries?.[durKey]) {
+          const keys = Object.keys(DATA.itineraries[durKey]);
+          const tmp = findBestKey(
+            keys.reduce((o,k)=> (o[k]=k, o),{}),
+            budget
+          );
+          budKey = tmp || budKey;
+        }
+
+        if (!durKey || !DATA.itineraries?.[durKey]) {
+          return res.json(replyText("Mình chưa có lịch trình cho thời lượng này. Thử 2N1Đ / 3N2Đ / 4N3Đ nhé!"));
+        }
+
+        const plan = DATA.itineraries[durKey][budKey] || DATA.itineraries[durKey]["vừa phải"];
+        let msg = `📅 Lịch trình **${durKey}** (${budKey}):\n` + plan.map((d,i)=>`- ${d}`).join("\n");
+
+        if (interests?.length) {
+          msg += `\n\n💡 Theo sở thích: ${interests.join(", ")}, mình có thể tinh chỉnh thêm quán ăn/cafe/điểm chụp hình.`;
+        }
+        return res.json(replyText(msg));
+      }
+
       default: {
         return res.json(replyText("Mình đã nhận yêu cầu, bạn mô tả rõ hơn nhé."));
       }

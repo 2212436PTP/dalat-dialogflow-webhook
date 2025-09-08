@@ -84,5 +84,58 @@
       "Ga Đà Lạt",
       "Nhà thờ Con Gà"
     ]
+  },
+  "itineraries": {
+    "2 ngày 1 đêm": {
+      "tiết kiệm": [
+        "Ngày 1: Sáng Langbiang – Trưa cơm gà – Chiều Vườn hoa – Tối Chợ đêm.",
+        "Ngày 2: Sáng Đồi chè Cầu Đất – Cafe view – Trưa trả phòng."
+      ],
+      "vừa phải": [
+        "Ngày 1: Sáng Langbiang – Trưa Lẩu gà lá é – Chiều Lumiere – Tối chợ đêm + kem bơ.",
+        "Ngày 2: Sáng Datanla (máng trượt) – Cafe Túi Mơ To – Trưa đặc sản – về."
+      ],
+      "thoải mái": [
+        "Ngày 1: Sáng Jeep Langbiang – Trưa nhà hàng – Chiều Lumiere – Tối BBQ + Massage.",
+        "Ngày 2: Sáng Datanla combo – Trưa cafe Mê Linh – xe đưa về."
+      ]
+    },
+    "3 ngày 2 đêm": {
+      "tiết kiệm": [
+        "Ngày 1: Lâm Viên – Vườn hoa – Chợ đêm.",
+        "Ngày 2: Datanla – Ga Đà Lạt – Nhà thờ Con Gà – Cafe view.",
+        "Ngày 3: Cầu Đất – mua quà – về."
+      ],
+      "vừa phải": [
+        "Ngày 1: Langbiang – Lumiere – Chợ đêm.",
+        "Ngày 2: Datanla – Đường hầm đất sét – Hồ Tuyền Lâm – Cafe.",
+        "Ngày 3: Cầu Đất – vườn dâu – về."
+      ],
+      "thoải mái": [
+        "Ngày 1: Langbiang Jeep – Nhà hàng – Lumiere – show tối.",
+        "Ngày 2: Datanla full combo – Tuyền Lâm – SUP/du thuyền – fine-dining.",
+        "Ngày 3: Cầu Đất – cafe Mê Linh – xe riêng đưa về."
+      ]
+    },
+    "4 ngày 3 đêm": {
+      "tiết kiệm": [
+        "Ngày 1: Lâm Viên – Vườn hoa – Chợ đêm.",
+        "Ngày 2: Datanla – Ga – Nhà thờ – Cafe.",
+        "Ngày 3: Pongour/Prenn – picnic – tối phố đi bộ.",
+        "Ngày 4: Cầu Đất – mua quà – về."
+      ],
+      "vừa phải": [
+        "Ngày 1: Langbiang – Lumiere – BBQ.",
+        "Ngày 2: Datanla – Tuyền Lâm – Đường hầm đất sét.",
+        "Ngày 3: Pongour – vườn dâu – cafe đồi.",
+        "Ngày 4: Cầu Đất – shopping – về."
+      ],
+      "thoải mái": [
+        "Ngày 1: Langbiang Jeep – nhà hàng – Lumiere – massage.",
+        "Ngày 2: Datanla full – Tuyền Lâm – du thuyền – fine-dining.",
+        "Ngày 3: Pongour – trải nghiệm trang trại – rượu vang.",
+        "Ngày 4: Cầu Đất – Mê Linh – xe riêng đưa về."
+      ]
+    }
   }
 }

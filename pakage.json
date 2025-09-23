@@ -1,0 +1,17 @@
+{
+  "name": "dalat-dialogflow-webhook",
+  "version": "1.0.0",
+  "description": "Webhook for Dialogflow ES using Express",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2"
+  }
+}

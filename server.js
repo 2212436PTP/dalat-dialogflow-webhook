@@ -31,6 +31,31 @@ app.post("/webhook", (req, res) => {
     // Intent chính
     // ======================
     switch (intent) {
+      case "user_intention": {
+        // Danh sách responses đa dạng
+        const responses = [
+          "🤔 Bạn đang tìm thông tin gì vậy?\n- 📍 Địa điểm nổi bật\n- 🍲 Món ăn đặc sản\n- ⏰ Giờ mở cửa\n- 📅 Lịch trình du lịch\n- 🎟️ Giá vé tham quan\n👉 Hãy chọn một trong các chủ đề trên nhé!",
+          "Mình có thể hỗ trợ bạn với:\n📍 Địa điểm du lịch | 🍲 Món ăn đặc sản | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\n👉 Bạn muốn tìm hiểu mục nào?",
+          "Bạn muốn biết về:\n- 📍 Chỗ đi chơi\n- 🍲 Ăn uống\n- ⏰ Giờ giấc tham quan\n- 📅 Lịch trình đi Đà Lạt\n- 🎟️ Giá vé\n👉 Chọn một để mình gợi ý nhé!",
+          "😉 Mình đoán bạn quan tâm đến một trong các thông tin sau:\n📍 Địa điểm | 🍲 Món ăn | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\n👉 Bạn cần thông tin nào nè?",
+          "Bạn muốn hỏi về điều gì trong chuyến đi?\n- 📍 Địa điểm nổi bật\n- 🍲 Món ăn đặc sản\n- ⏰ Giờ mở cửa\n- 📅 Lịch trình du lịch\n- 🎟️ Giá vé tham quan",
+          "👉 Có phải bạn muốn mình gợi ý:\n📍 Địa điểm tham quan | 🍲 Món ăn đặc sản | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\nBạn chọn nhé!"
+        ];
+
+        // Lấy ngẫu nhiên 1 response
+        responseText = responses[Math.floor(Math.random() * responses.length)];
+
+        // Gợi ý chips
+        chips = [
+          { text: "📍 Địa điểm nổi bật" },
+          { text: "🍲 Món ăn đặc sản" },
+          { text: "⏰ Giờ mở cửa" },
+          { text: "📅 Lịch trình du lịch" },
+          { text: "🎟️ Giá vé tham quan" }
+        ];
+        break;
+      }
+
       case "find_place": {
         const q = queryText.toLowerCase();
 

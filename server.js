@@ -6,6 +6,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+// Test route
+app.get("/", (req, res) => {
+  res.send("🚀 Dalat Tourism Webhook is running! Access /webhook for Dialogflow integration.");
+});
+
 // ========================================================
 // HELPER FUNCTION
 // ========================================================
@@ -163,58 +168,117 @@ const shoppingResponses = [
 app.post("/webhook", (req, res) => {
   try {
     const intent = req.body.queryResult.intent.displayName;
+    const queryText = req.body.queryResult.queryText || "";
     console.log("👉 Intent nhận được:", intent);
+    console.log("👉 Query text:", queryText);
 
     let responseText = "👋 Xin chào, mình có thể hỗ trợ gì cho chuyến du lịch của bạn?";
+    let chips = [];
 
-    switch (intent) {
-      case "find_place":
-        responseText = getRandomResponse(findPlaceResponses);
-        break;
-      case "food_recommendation":
-        responseText = getRandomResponse(foodResponses);
-        break;
-      case "opening_hours":
-        responseText = getRandomResponse(openingHoursResponses);
-        break;
-      case "plan_itinerary":
-        responseText = getRandomResponse(planItineraryResponses);
-        break;
-      case "ticket_price":
-        responseText = getRandomResponse(ticketPriceResponses);
-        break;
-      case "transport":
-        responseText = getRandomResponse(transportResponses);
-        break;
-      case "festival":
-        responseText = getRandomResponse(festivalResponses);
-        break;
-      case "history":
-        responseText = getRandomResponse(historyResponses);
-        break;
-      case "tips":
-        responseText = getRandomResponse(tipsResponses);
-        break;
-      case "shopping":
-        responseText = getRandomResponse(shoppingResponses);
-        break;
-      default:
-        responseText = "👋 Xin chào, mình có thể hỗ trợ gì cho chuyến du lịch của bạn?";
-    }
-
-    // Chips luôn hiển thị lại
-    const chips = [
+    // Main categories
+    const mainChips = [
       { text: "📍 Địa điểm nổi bật" },
       { text: "🍲 Món ăn đặc sản" },
       { text: "⏰ Giờ mở cửa" },
       { text: "📅 Lịch trình du lịch" },
-      { text: "🎟️ Giá vé tham quan" },
-      { text: "🚖 Đi lại ở Đà Lạt" },
-      { text: "🎉 Festival Hoa Đà Lạt" },
-      { text: "🏛️ Lịch sử Đà Lạt" },
-      { text: "💡 Mẹo du lịch" },
-      { text: "🛍️ Mua sắm đặc sản" }
+      { text: "🎟️ Giá vé tham quan" }
     ];
+
+    switch (intent) {
+      case "find_place":
+        responseText = getRandomResponse(findPlaceResponses);
+        chips = [
+          { text: "🏔️ Langbiang" },
+          { text: "🌸 Vườn hoa thành phố" },
+          { text: "🏞️ Thác Datanla" },
+          { text: "🌊 Thác Pongour" },
+          { text: "🌙 Chợ đêm Đà Lạt" },
+          { text: "☕ Quán cà phê view đẹp" }
+        ];
+        break;
+
+      case "food_recommendation":
+        responseText = getRandomResponse(foodResponses);
+        chips = [
+          { text: "🥞 Bánh căn" },
+          { text: "🍜 Mì Quảng" },
+          { text: "🥘 Lẩu gà lá é" },
+          { text: "🔥 Bánh tráng nướng" },
+          { text: "🥛 Sữa đậu nành" },
+          { text: "🍖 BBQ nướng" }
+        ];
+        break;
+
+      case "opening_hours":
+        responseText = getRandomResponse(openingHoursResponses);
+        chips = [
+          { text: "🏔️ Giờ mở Langbiang" },
+          { text: "🌸 Giờ mở Vườn hoa" },
+          { text: "🏞️ Giờ mở Thác Datanla" },
+          { text: "🌙 Giờ mở Chợ đêm" },
+          { text: "🏯 Giờ mở Nhà thờ Con Gà" }
+        ];
+        break;
+
+      case "plan_itinerary":
+        responseText = getRandomResponse(planItineraryResponses);
+        chips = [
+          { text: "📅 Lịch trình 2N1Đ" },
+          { text: "📅 Lịch trình 3N2Đ" },
+          { text: "📅 Lịch trình 4N3Đ" },
+          { text: "👨‍👩‍👧‍👦 Tour gia đình" },
+          { text: "👫 Tour nhóm bạn" },
+          { text: "💰 Tour tiết kiệm" }
+        ];
+        break;
+
+      case "ticket_price":
+        responseText = getRandomResponse(ticketPriceResponses);
+        chips = [
+          { text: "🏔️ Giá vé Langbiang" },
+          { text: "🌸 Giá vé Vườn hoa" },
+          { text: "🏞️ Giá vé Thác Datanla" },
+          { text: "🌊 Giá vé Thác Pongour" },
+          { text: "🆓 Địa điểm miễn phí" }
+        ];
+        break;
+
+      // Handle specific sub-intents based on query text
+      default:
+        // Check if query matches specific items
+        if (queryText.includes("Bánh căn") || queryText.includes("bánh căn")) {
+          responseText = "🥞 Bánh căn Đà Lạt - món ăn đặc trưng! Quán nổi tiếng: Bánh căn Tăng Bạt Hổ, Bánh căn chợ đêm. Giá khoảng 3k-5k/cái.";
+        } else if (queryText.includes("Mì Quảng") || queryText.includes("mì quảng")) {
+          responseText = "🍜 Mì Quảng ngon tại quán Hồng (đường Phan Đình Phùng). Đậm đà hương vị miền Trung, giá khoảng 35k-45k/tô.";
+        } else if (queryText.includes("Lẩu gà lá é") || queryText.includes("lẩu gà")) {
+          responseText = "🥘 Lẩu gà lá é - đặc sản Đà Lạt! Quán Tao Ngộ nổi tiếng, vị chua chua cay cay rất đặc biệt. Giá khoảng 200k-300k/nồi.";
+        } else if (queryText.includes("Bánh tráng nướng") || queryText.includes("bánh tráng")) {
+          responseText = "🔥 Bánh tráng nướng - street food số 1! Ở chợ đêm rất nhiều xe bán, ăn kèm với trứng cút, tôm khô. Giá 10k-15k/cái.";
+        } else if (queryText.includes("Sữa đậu nành") || queryText.includes("sữa đậu")) {
+          responseText = "🥛 Sữa đậu nành Hoa Sữa nổi tiếng! Uống nóng buổi sáng hoặc tối mát, giá chỉ 8k-12k/ly.";
+        } else if (queryText.includes("Langbiang")) {
+          responseText = "🏔️ Langbiang - đỉnh núi cao nhất Đà Lạt! Có thể đi bộ hoặc jeep lên đỉnh. Cảnh đẹp tuyệt vời để ngắm toàn cảnh thành phố.";
+        } else if (queryText.includes("Vườn hoa")) {
+          responseText = "🌸 Vườn hoa thành phố - điểm check-in hot! Nhiều loại hoa đẹp, phù hợp chụp ảnh. Có cả khu vui chơi cho trẻ em.";
+        } else if (queryText.includes("Thác Datanla")) {
+          responseText = "�️ Thác Datanla - thác nước đẹp với trò chơi mạo hiểm! Có tobogan trượt thác, canopy walk, địa hình ATV.";
+        } else {
+          responseText = "� Xin chào, mình có thể hỗ trợ gì cho chuyến du lịch của bạn?";
+        }
+        
+        // Use main chips for default or unrecognized intents
+        chips = mainChips;
+    }
+
+    // Add main navigation chips at the end if showing sub-chips
+    if (chips.length > 0 && !chips.some(chip => chip.text.includes("📍 Địa điểm"))) {
+      chips.push({ text: "� Trở về menu chính" });
+    }
+
+    // If no specific chips, use main chips
+    if (chips.length === 0) {
+      chips = mainChips;
+    }
 
     res.json({
       fulfillmentMessages: [

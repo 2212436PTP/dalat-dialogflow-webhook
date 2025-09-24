@@ -2,46 +2,19 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chatbot Du Lịch Đà Lạt</title>
-
-  <!-- CSS tùy chỉnh giao diện chips -->
-  <style>
-    /* Tùy chỉnh toàn bộ widget */
-    df-messenger {
-      --df-messenger-bot-message: #e6f0ff;
-      --df-messenger-button-titlebar-color: #1a73e8;
-      --df-messenger-chat-background-color: #ffffff;
-      --df-messenger-send-icon: #1a73e8;
-    }
-
-    /* Hiển thị chips nằm ngang */
-    df-messenger .df-messenger-chat-bubble .chips {
-      display: flex !important;
-      flex-wrap: nowrap !important;
-      overflow-x: auto !important;
-    }
-
-    df-messenger .df-messenger-chat-bubble .chip {
-      margin-right: 8px !important;
-      white-space: nowrap !important;
-      flex-shrink: 0 !important;
-    }
-  </style>
 </head>
 <body>
-  <h2>Chatbot Du Lịch Đà Lạt</h2>
-  <p>Xin chào! Hãy thử trò chuyện với chatbot ngay góc dưới bên phải nhé 😊</p>
+  <h1>Xin chào 👋</h1>
+  <p>Đây là demo Chatbot Du Lịch Đà Lạt tích hợp Dialogflow Messenger.</p>
 
-  <!-- Dialogflow Messenger -->
+  <!-- Nhúng Dialogflow Messenger -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
   <df-messenger
     intent="WELCOME"
-    chat-title="dalat-travel-bot"
+    chat-title="Chatbot-DaLat"
     agent-id="d8a0be4c-3dd4-4e9b-801d-207cc4703c99"
     language-code="vi"
   ></df-messenger>
-
-  <!-- Script Dialogflow Messenger -->
-  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 </body>
 </html>

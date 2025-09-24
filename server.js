@@ -36,34 +36,41 @@ app.post("/webhook", (req, res) => {
 
         if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
           responseText =
-            "☕ Một số quán cà phê view đẹp ở Đà Lạt:\n\n" +
+            "☕ Quán cà phê view đẹp ở Đà Lạt:\n" +
             "- Horizon Coffee - 31/6 Tự Phước\n" +
             "- Panorama Cafe - Trại Mát\n" +
             "- Túi Mơ To - Hẻm 31 Sào Nam\n" +
             "- Mê Linh Coffee Garden - Tổ 20, Thôn 4, Tà Nung";
+        } else if (q.includes("homestay") && q.includes("trung tâm")) {
+          responseText =
+            "🏡 Homestay gần trung tâm:\n" +
+            "- Dalat Lacasa - 59 Nam Kỳ Khởi Nghĩa\n" +
+            "- The Art - 30 Trần Bình Trọng\n" +
+            "- Bonjour Homestay - 15 Nam Hồ";
         } else if (q.includes("homestay")) {
           responseText =
-            "🏡 Homestay đẹp & giá hợp lý:\n\n" +
+            "🏡 Homestay đẹp & giá hợp lý:\n" +
             "- The Wilder-nest - Hồ Tuyền Lâm\n" +
-            "- Dalat Lacasa - 59 Nam Kỳ Khởi Nghĩa\n" +
             "- Tre's House - Trần Hưng Đạo\n" +
             "- LengKeng Homestay - Làng hoa Vạn Thành";
+        } else if (q.includes("chợ") && q.includes("đêm")) {
+          responseText =
+            "🌙 Chợ đêm Đà Lạt (Chợ Âm Phủ) nằm ngay trung tâm TP, hoạt động từ 17h đến 22h, nổi tiếng với đồ ăn vặt và quà lưu niệm.";
         } else if (q.includes("chợ")) {
           responseText =
-            "🛍️ Các chợ nổi tiếng:\n\n" +
+            "🛍️ Các chợ nổi tiếng:\n" +
             "- Chợ Đà Lạt (Trung tâm TP)\n" +
-            "- Chợ Âm Phủ (khu Hòa Bình)\n" +
             "- Chợ nông sản Trại Mát – rau củ, hoa tươi";
         } else if (q.includes("thác")) {
           responseText =
-            "🌊 Một số thác đẹp:\n\n" +
+            "🌊 Thác đẹp ở Đà Lạt:\n" +
             "- Thác Datanla - QL20, Đèo Prenn\n" +
             "- Thác Pongour - Đức Trọng\n" +
             "- Thác Prenn - Đèo Prenn\n" +
             "- Thác Cam Ly - Đường Hoàng Văn Thụ";
         } else if (q.includes("check-in")) {
           responseText =
-            "📸 Địa điểm check-in sống ảo:\n\n" +
+            "📸 Địa điểm check-in sống ảo:\n" +
             "- Quảng trường Lâm Viên\n" +
             "- Hồ Xuân Hương\n" +
             "- Cánh đồng hoa Cẩm Tú Cầu\n" +
@@ -71,7 +78,7 @@ app.post("/webhook", (req, res) => {
             "- Vườn hoa thành phố";
         } else {
           responseText =
-            "📍 Một số địa điểm nổi bật:\n\n" +
+            "📍 Một số địa điểm nổi bật:\n" +
             "✨ Quảng trường Lâm Viên\n" +
             "🌊 Hồ Xuân Hương\n" +
             "⛰️ Núi Langbiang\n" +
@@ -86,13 +93,13 @@ app.post("/webhook", (req, res) => {
 
         if (food.includes("bánh căn")) {
           responseText =
-            "🥞 Bánh căn ngon:\n- Bánh căn Nhà Chung - 1 Nhà Chung\n- Bánh căn Lệ - 27/44 Yersin";
+            "🥞 Bánh căn:\n- Bánh căn Nhà Chung - 1 Nhà Chung\n- Bánh căn Lệ - 27/44 Yersin";
         } else if (food.includes("lẩu")) {
           responseText =
             "🍲 Lẩu ngon:\n- Lẩu bò Ba Toa - 1/29 Hoàng Diệu\n- Lẩu gà lá é Tao Ngộ - 27 Lê Đại Hành\n- Lẩu dê Lâm Ký - 2 Hoàng Văn Thụ";
         } else if (food.includes("nem nướng")) {
           responseText =
-            "🥗 Nem nướng nổi tiếng:\n- Nem nướng Bà Hùng - 328 Phan Đình Phùng\n- Nem nướng Dũng Lộc - 254 Phan Đình Phùng";
+            "🥗 Nem nướng:\n- Bà Hùng - 328 Phan Đình Phùng\n- Dũng Lộc - 254 Phan Đình Phùng";
         } else if (food.includes("bánh tráng")) {
           responseText =
             "🥮 Bánh tráng nướng:\n- Dì Đinh - 26 Hoàng Diệu\n- Quán 112 Nguyễn Văn Trỗi";
@@ -101,12 +108,13 @@ app.post("/webhook", (req, res) => {
             "🍗 Bánh ướt lòng gà:\n- Quán Trang - 15F Tăng Bạt Hổ\n- Quán Long - 202 Phan Đình Phùng";
         } else if (food.includes("bánh mì")) {
           responseText =
-            "🥖 Bánh mì xíu mại:\n- 26 Hoàng Diệu (nổi tiếng)\n- Bánh mì xíu mại BH - 47 Thông Thiên Học";
+            "🥖 Bánh mì xíu mại:\n- 26 Hoàng Diệu (nổi tiếng)\n- 47 Thông Thiên Học";
         } else if (food.includes("chè") || food.includes("kem") || food.includes("sữa đậu nành")) {
           responseText =
             "🍧 Đồ ngọt:\n- Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n- Chè Hé - 11A 3/2\n- Sữa đậu nành Hoa Sữa - gần chợ Đêm";
         } else if (food.includes("mì quảng")) {
-          responseText = "🍜 Mì Quảng Hằng - 15 Thông Thiên Học";
+          responseText =
+            "🍜 Mì Quảng:\n- Mì Quảng Hằng - 15 Thông Thiên Học\n- Mì Quảng Hội An - 27 Hai Bà Trưng";
         } else if (food.includes("ốc")) {
           responseText = "🐚 Ốc nhồi thịt - 33 Hai Bà Trưng";
         } else if (food.includes("bbq")) {
@@ -115,14 +123,14 @@ app.post("/webhook", (req, res) => {
           responseText = "🇹🇭 Tomyum Thái - 6 Nguyễn Văn Trỗi";
         } else {
           responseText =
-            "🍲 Một số đặc sản Đà Lạt:\n- Bánh căn Nhà Chung\n- Lẩu gà lá é Tao Ngộ\n- Nem nướng Bà Hùng\n- Kem bơ Thanh Thảo\n- Bánh mì xíu mại Hoàng Diệu";
+            "🍲 Đặc sản nổi bật:\n- Bánh căn Nhà Chung\n- Lẩu gà lá é Tao Ngộ\n- Nem nướng Bà Hùng\n- Kem bơ Thanh Thảo\n- Bánh mì xíu mại Hoàng Diệu";
         }
         break;
       }
 
       case "opening_hours":
         responseText =
-          "⏰ Giờ mở cửa tham khảo:\n\n" +
+          "⏰ Giờ mở cửa:\n\n" +
           "⛰️ Langbiang: 7:00 - 17:00\n" +
           "🌺 Vườn hoa TP: 7:30 - 17:00\n" +
           "🏞️ Thác Datanla: 7:00 - 17:00\n" +
@@ -141,7 +149,7 @@ app.post("/webhook", (req, res) => {
 
       case "ticket_price":
         responseText =
-          "🎟️ Giá vé tham quan:\n\n" +
+          "🎟️ Giá vé:\n\n" +
           "⛰️ Langbiang: 30.000đ\n" +
           "🌺 Vườn hoa TP: 50.000đ\n" +
           "🏞️ Thác Datanla: 50.000đ\n" +

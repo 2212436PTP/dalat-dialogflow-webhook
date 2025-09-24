@@ -31,25 +31,94 @@ app.post("/webhook", (req, res) => {
     // Intent chính
     // ======================
     switch (intent) {
-      case "find_place":
-        responseText =
-          "📍 Một số địa điểm nổi bật tại Đà Lạt:\n\n" +
-          "✨ Quảng trường Lâm Viên - Trần Quốc Toản, P.1\n" +
-          "🌊 Hồ Xuân Hương - Trung tâm TP Đà Lạt\n" +
-          "⛰️ Núi Langbiang - TT Lạc Dương, Lâm Đồng\n" +
-          "🌺 Vườn hoa TP - Trần Quốc Toản, P.8\n" +
-          "🏞️ Thác Datanla - QL20, Đèo Prenn";
-        break;
+      case "find_place": {
+        const q = queryText.toLowerCase();
 
-      case "food_recommendation":
-        responseText =
-          "🍲 Đặc sản kèm địa chỉ:\n\n" +
-          "🥞 Bánh căn - 1 Nhà Chung, P.3\n" +
-          "🥘 Lẩu gà lá é - Tao Ngộ, 27 Lê Đại Hành\n" +
-          "🥗 Nem nướng Bà Hùng - 328 Phan Đình Phùng\n" +
-          "🥤 Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n" +
-          "🥖 Bánh mì xíu mại - 26 Hoàng Diệu";
+        if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
+          responseText =
+            "☕ Một số quán cà phê view đẹp ở Đà Lạt:\n\n" +
+            "- Horizon Coffee - 31/6 Tự Phước\n" +
+            "- Panorama Cafe - Trại Mát\n" +
+            "- Túi Mơ To - Hẻm 31 Sào Nam\n" +
+            "- Mê Linh Coffee Garden - Tổ 20, Thôn 4, Tà Nung";
+        } else if (q.includes("homestay")) {
+          responseText =
+            "🏡 Homestay đẹp & giá hợp lý:\n\n" +
+            "- The Wilder-nest - Hồ Tuyền Lâm\n" +
+            "- Dalat Lacasa - 59 Nam Kỳ Khởi Nghĩa\n" +
+            "- Tre's House - Trần Hưng Đạo\n" +
+            "- LengKeng Homestay - Làng hoa Vạn Thành";
+        } else if (q.includes("chợ")) {
+          responseText =
+            "🛍️ Các chợ nổi tiếng:\n\n" +
+            "- Chợ Đà Lạt (Trung tâm TP)\n" +
+            "- Chợ Âm Phủ (khu Hòa Bình)\n" +
+            "- Chợ nông sản Trại Mát – rau củ, hoa tươi";
+        } else if (q.includes("thác")) {
+          responseText =
+            "🌊 Một số thác đẹp:\n\n" +
+            "- Thác Datanla - QL20, Đèo Prenn\n" +
+            "- Thác Pongour - Đức Trọng\n" +
+            "- Thác Prenn - Đèo Prenn\n" +
+            "- Thác Cam Ly - Đường Hoàng Văn Thụ";
+        } else if (q.includes("check-in")) {
+          responseText =
+            "📸 Địa điểm check-in sống ảo:\n\n" +
+            "- Quảng trường Lâm Viên\n" +
+            "- Hồ Xuân Hương\n" +
+            "- Cánh đồng hoa Cẩm Tú Cầu\n" +
+            "- Nông trại Puppy Farm\n" +
+            "- Vườn hoa thành phố";
+        } else {
+          responseText =
+            "📍 Một số địa điểm nổi bật:\n\n" +
+            "✨ Quảng trường Lâm Viên\n" +
+            "🌊 Hồ Xuân Hương\n" +
+            "⛰️ Núi Langbiang\n" +
+            "🌺 Vườn hoa TP\n" +
+            "🏞️ Thác Datanla";
+        }
         break;
+      }
+
+      case "food_recommendation": {
+        const food = queryText.toLowerCase();
+
+        if (food.includes("bánh căn")) {
+          responseText =
+            "🥞 Bánh căn ngon:\n- Bánh căn Nhà Chung - 1 Nhà Chung\n- Bánh căn Lệ - 27/44 Yersin";
+        } else if (food.includes("lẩu")) {
+          responseText =
+            "🍲 Lẩu ngon:\n- Lẩu bò Ba Toa - 1/29 Hoàng Diệu\n- Lẩu gà lá é Tao Ngộ - 27 Lê Đại Hành\n- Lẩu dê Lâm Ký - 2 Hoàng Văn Thụ";
+        } else if (food.includes("nem nướng")) {
+          responseText =
+            "🥗 Nem nướng nổi tiếng:\n- Nem nướng Bà Hùng - 328 Phan Đình Phùng\n- Nem nướng Dũng Lộc - 254 Phan Đình Phùng";
+        } else if (food.includes("bánh tráng")) {
+          responseText =
+            "🥮 Bánh tráng nướng:\n- Dì Đinh - 26 Hoàng Diệu\n- Quán 112 Nguyễn Văn Trỗi";
+        } else if (food.includes("bánh ướt")) {
+          responseText =
+            "🍗 Bánh ướt lòng gà:\n- Quán Trang - 15F Tăng Bạt Hổ\n- Quán Long - 202 Phan Đình Phùng";
+        } else if (food.includes("bánh mì")) {
+          responseText =
+            "🥖 Bánh mì xíu mại:\n- 26 Hoàng Diệu (nổi tiếng)\n- Bánh mì xíu mại BH - 47 Thông Thiên Học";
+        } else if (food.includes("chè") || food.includes("kem") || food.includes("sữa đậu nành")) {
+          responseText =
+            "🍧 Đồ ngọt:\n- Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n- Chè Hé - 11A 3/2\n- Sữa đậu nành Hoa Sữa - gần chợ Đêm";
+        } else if (food.includes("mì quảng")) {
+          responseText = "🍜 Mì Quảng Hằng - 15 Thông Thiên Học";
+        } else if (food.includes("ốc")) {
+          responseText = "🐚 Ốc nhồi thịt - 33 Hai Bà Trưng";
+        } else if (food.includes("bbq")) {
+          responseText = "🔥 BBQ Fungi Chingu - 1 Nguyễn Thị Minh Khai";
+        } else if (food.includes("thái")) {
+          responseText = "🇹🇭 Tomyum Thái - 6 Nguyễn Văn Trỗi";
+        } else {
+          responseText =
+            "🍲 Một số đặc sản Đà Lạt:\n- Bánh căn Nhà Chung\n- Lẩu gà lá é Tao Ngộ\n- Nem nướng Bà Hùng\n- Kem bơ Thanh Thảo\n- Bánh mì xíu mại Hoàng Diệu";
+        }
+        break;
+      }
 
       case "opening_hours":
         responseText =
@@ -72,85 +141,20 @@ app.post("/webhook", (req, res) => {
 
       case "ticket_price":
         responseText =
-          "🎟️ Giá vé & địa chỉ:\n\n" +
-          "⛰️ Langbiang - Lạc Dương: 30.000đ\n" +
-          "🌺 Vườn hoa TP - Trần Quốc Toản: 50.000đ\n" +
-          "🏞️ Thác Datanla - QL20 Prenn: 50.000đ\n" +
-          "🌄 Thung lũng Tình Yêu - Mai Anh Đào: 100.000đ\n" +
-          "🚉 Ga Đà Lạt - Quang Trung: 10.000đ";
+          "🎟️ Giá vé tham quan:\n\n" +
+          "⛰️ Langbiang: 30.000đ\n" +
+          "🌺 Vườn hoa TP: 50.000đ\n" +
+          "🏞️ Thác Datanla: 50.000đ\n" +
+          "🌄 Thung lũng Tình Yêu: 100.000đ\n" +
+          "🚉 Ga Đà Lạt: 10.000đ";
         break;
 
-      // Intent con lịch trình
+      // ======================
+      // Itinerary chi tiết
+      // ======================
       case "itinerary_2d1n":
-      case "itinerary_3d2n":
-      case "itinerary_4d3n":
-        // Xử lý bằng fallback bên dưới
-        break;
-    }
-
-    // ======================
-    // Fallback check queryText (chips chính & chips con)
-    // ======================
-    switch (queryText) {
-      // ==== Chips chính ====
-      case "📍 Địa điểm nổi bật":
-      case "Địa điểm nổi bật":
-        responseText =
-          "📍 Một số địa điểm nổi bật tại Đà Lạt:\n\n" +
-          "✨ Quảng trường Lâm Viên - Trần Quốc Toản, P.1\n" +
-          "🌊 Hồ Xuân Hương - Trung tâm TP Đà Lạt\n" +
-          "⛰️ Núi Langbiang - TT Lạc Dương, Lâm Đồng\n" +
-          "🌺 Vườn hoa TP - Trần Quốc Toản, P.8\n" +
-          "🏞️ Thác Datanla - QL20, Đèo Prenn";
-        break;
-
-      case "🍲 Món ăn đặc sản":
-      case "Món ăn đặc sản":
-        responseText =
-          "🍲 Đặc sản kèm địa chỉ:\n\n" +
-          "🥞 Bánh căn - 1 Nhà Chung, P.3\n" +
-          "🥘 Lẩu gà lá é - Tao Ngộ, 27 Lê Đại Hành\n" +
-          "🥗 Nem nướng Bà Hùng - 328 Phan Đình Phùng\n" +
-          "🥤 Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n" +
-          "🥖 Bánh mì xíu mại - 26 Hoàng Diệu";
-        break;
-
-      case "⏰ Giờ mở cửa":
-      case "Giờ mở cửa":
-        responseText =
-          "⏰ Giờ mở cửa tham khảo:\n\n" +
-          "⛰️ Langbiang: 7:00 - 17:00\n" +
-          "🌺 Vườn hoa TP: 7:30 - 17:00\n" +
-          "🏞️ Thác Datanla: 7:00 - 17:00\n" +
-          "🏯 Đường hầm đất sét: 7:00 - 17:00\n" +
-          "🌙 Chợ đêm: 17:00 - 22:00";
-        break;
-
-      case "📅 Lịch trình du lịch":
-      case "Lịch trình du lịch":
-        responseText = "Bạn muốn đi mấy ngày?";
-        chips = [
-          { text: "2 ngày 1 đêm" },
-          { text: "3 ngày 2 đêm" },
-          { text: "4 ngày 3 đêm" }
-        ];
-        break;
-
-      case "🎟️ Giá vé tham quan":
-      case "Giá vé tham quan":
-        responseText =
-          "🎟️ Giá vé & địa chỉ:\n\n" +
-          "⛰️ Langbiang - Lạc Dương: 30.000đ\n" +
-          "🌺 Vườn hoa TP - Trần Quốc Toản: 50.000đ\n" +
-          "🏞️ Thác Datanla - QL20 Prenn: 50.000đ\n" +
-          "🌄 Thung lũng Tình Yêu - Mai Anh Đào: 100.000đ\n" +
-          "🚉 Ga Đà Lạt - Quang Trung: 10.000đ";
-        break;
-
-      // ==== Chips con ====
       case "2 ngày 1 đêm":
       case "2N1Đ":
-      case "itinerary_2d1n":
         responseText =
           "📅 Lịch trình 2N1Đ:\n\n" +
           "🌞 Ngày 1:\n" +
@@ -161,12 +165,12 @@ app.post("/webhook", (req, res) => {
           "🌞 Ngày 2:\n" +
           "- Sáng: Vườn hoa thành phố\n" +
           "- Trưa: Bánh căn Nhà Chung\n" +
-          "- Chiều: Thác Datanla, về trung tâm";
+          "- Chiều: Thác Datanla, quay lại trung tâm";
         break;
 
+      case "itinerary_3d2n":
       case "3 ngày 2 đêm":
       case "3N2Đ":
-      case "itinerary_3d2n":
         responseText =
           "📅 Lịch trình 3N2Đ:\n\n" +
           "🌞 Ngày 1:\n" +
@@ -182,19 +186,20 @@ app.post("/webhook", (req, res) => {
           "🌞 Ngày 3:\n" +
           "- Sáng: Thung lũng Tình Yêu\n" +
           "- Trưa: Cơm gà Tam Nguyên\n" +
-          "- Chiều: Ga Đà Lạt, mua đặc sản";
+          "- Chiều: Ga Đà Lạt\n" +
+          "- Tối: Mua đặc sản";
         break;
 
+      case "itinerary_4d3n":
       case "4 ngày 3 đêm":
       case "4N3Đ":
-      case "itinerary_4d3n":
         responseText =
           "📅 Lịch trình 4N3Đ:\n\n" +
           "🌞 Ngày 1:\n" +
           "- Sáng: Quảng trường Lâm Viên, Hồ Xuân Hương\n" +
           "- Trưa: Lẩu gà lá é Tao Ngộ\n" +
           "- Chiều: Núi Langbiang\n" +
-          "- Tối: Dạo Chợ đêm, ăn vặt bánh tráng nướng\n\n" +
+          "- Tối: Dạo Chợ đêm, ăn bánh tráng nướng\n\n" +
           "🌞 Ngày 2:\n" +
           "- Sáng: Vườn hoa thành phố\n" +
           "- Trưa: Nem nướng Bà Hùng\n" +
@@ -207,8 +212,9 @@ app.post("/webhook", (req, res) => {
           "- Tối: BBQ Fungi Chingu\n\n" +
           "🌞 Ngày 4:\n" +
           "- Sáng: Thung lũng Tình Yêu\n" +
-          "- Trưa: Cơm lam, gà nướng\n" +
-          "- Chiều: Chùa Linh Phước, mua đặc sản";
+          "- Trưa: Cơm lam gà nướng\n" +
+          "- Chiều: Chùa Linh Phước\n" +
+          "- Tối: Mua đặc sản mang về";
         break;
     }
 

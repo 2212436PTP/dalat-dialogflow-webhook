@@ -80,9 +80,76 @@ app.post("/webhook", (req, res) => {
           "🚉 Ga Đà Lạt - Quang Trung: 10.000đ";
         break;
 
-      // ======================
       // Intent con lịch trình
-      // ======================
+      case "itinerary_2d1n":
+      case "itinerary_3d2n":
+      case "itinerary_4d3n":
+        // Xử lý bằng fallback bên dưới
+        break;
+    }
+
+    // ======================
+    // Fallback check queryText (chips chính & chips con)
+    // ======================
+    switch (queryText) {
+      // ==== Chips chính ====
+      case "📍 Địa điểm nổi bật":
+      case "Địa điểm nổi bật":
+        responseText =
+          "📍 Một số địa điểm nổi bật tại Đà Lạt:\n\n" +
+          "✨ Quảng trường Lâm Viên - Trần Quốc Toản, P.1\n" +
+          "🌊 Hồ Xuân Hương - Trung tâm TP Đà Lạt\n" +
+          "⛰️ Núi Langbiang - TT Lạc Dương, Lâm Đồng\n" +
+          "🌺 Vườn hoa TP - Trần Quốc Toản, P.8\n" +
+          "🏞️ Thác Datanla - QL20, Đèo Prenn";
+        break;
+
+      case "🍲 Món ăn đặc sản":
+      case "Món ăn đặc sản":
+        responseText =
+          "🍲 Đặc sản kèm địa chỉ:\n\n" +
+          "🥞 Bánh căn - 1 Nhà Chung, P.3\n" +
+          "🥘 Lẩu gà lá é - Tao Ngộ, 27 Lê Đại Hành\n" +
+          "🥗 Nem nướng Bà Hùng - 328 Phan Đình Phùng\n" +
+          "🥤 Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n" +
+          "🥖 Bánh mì xíu mại - 26 Hoàng Diệu";
+        break;
+
+      case "⏰ Giờ mở cửa":
+      case "Giờ mở cửa":
+        responseText =
+          "⏰ Giờ mở cửa tham khảo:\n\n" +
+          "⛰️ Langbiang: 7:00 - 17:00\n" +
+          "🌺 Vườn hoa TP: 7:30 - 17:00\n" +
+          "🏞️ Thác Datanla: 7:00 - 17:00\n" +
+          "🏯 Đường hầm đất sét: 7:00 - 17:00\n" +
+          "🌙 Chợ đêm: 17:00 - 22:00";
+        break;
+
+      case "📅 Lịch trình du lịch":
+      case "Lịch trình du lịch":
+        responseText = "Bạn muốn đi mấy ngày?";
+        chips = [
+          { text: "2 ngày 1 đêm" },
+          { text: "3 ngày 2 đêm" },
+          { text: "4 ngày 3 đêm" }
+        ];
+        break;
+
+      case "🎟️ Giá vé tham quan":
+      case "Giá vé tham quan":
+        responseText =
+          "🎟️ Giá vé & địa chỉ:\n\n" +
+          "⛰️ Langbiang - Lạc Dương: 30.000đ\n" +
+          "🌺 Vườn hoa TP - Trần Quốc Toản: 50.000đ\n" +
+          "🏞️ Thác Datanla - QL20 Prenn: 50.000đ\n" +
+          "🌄 Thung lũng Tình Yêu - Mai Anh Đào: 100.000đ\n" +
+          "🚉 Ga Đà Lạt - Quang Trung: 10.000đ";
+        break;
+
+      // ==== Chips con ====
+      case "2 ngày 1 đêm":
+      case "2N1Đ":
       case "itinerary_2d1n":
         responseText =
           "📅 Lịch trình 2N1Đ:\n\n" +
@@ -97,6 +164,8 @@ app.post("/webhook", (req, res) => {
           "- Chiều: Thác Datanla, về trung tâm";
         break;
 
+      case "3 ngày 2 đêm":
+      case "3N2Đ":
       case "itinerary_3d2n":
         responseText =
           "📅 Lịch trình 3N2Đ:\n\n" +
@@ -116,6 +185,8 @@ app.post("/webhook", (req, res) => {
           "- Chiều: Ga Đà Lạt, mua đặc sản";
         break;
 
+      case "4 ngày 3 đêm":
+      case "4N3Đ":
       case "itinerary_4d3n":
         responseText =
           "📅 Lịch trình 4N3Đ:\n\n" +

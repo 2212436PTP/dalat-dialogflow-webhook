@@ -121,6 +121,58 @@ app.post("/webhook", (req, res) => {
           responseText = "🔥 BBQ Fungi Chingu - 1 Nguyễn Thị Minh Khai";
         } else if (food.includes("thái")) {
           responseText = "🇹🇭 Tomyum Thái - 6 Nguyễn Văn Trỗi";
+        } else if (food.includes("bún bò")) {
+          responseText =
+            "🍜 Bún bò ngon ở Đà Lạt:\n" +
+            "- Bún bò Xuân An - 15A Nhà Chung\n" +
+            "- Bún bò Công - 1 Phù Đổng Thiên Vương\n" +
+            "- Bún bò Huế O Lanh - 254 Phan Đình Phùng";
+        } else if (food.includes("phở")) {
+          responseText =
+            "🍲 Phở bò nổi tiếng:\n" +
+            "- Phở Hiếu - 23 Tăng Bạt Hổ\n" +
+            "- Phở Thưng - 2 Nguyễn Văn Cừ\n" +
+            "- Phở Bằng - 18 Nguyễn Văn Trỗi";
+        } else if (food.includes("ăn vặt")) {
+          responseText =
+            "🍡 Ăn vặt Đà Lạt:\n" +
+            "- Khu chợ đêm Đà Lạt (đa dạng đồ ăn vặt)\n" +
+            "- Bánh tráng nướng Dì Đinh - 26 Hoàng Diệu\n" +
+            "- Xiên que nướng Phan Đình Phùng\n" +
+            "- Sữa đậu nành nóng - Quán Hoa Sữa gần chợ";
+        } else if (food.includes("xiên") || food.includes("nướng")) {
+          responseText =
+            "🔥 Xiên que & đồ nướng:\n" +
+            "- Nướng ngói Cu Đức - 6A Nguyễn Lương Bằng\n" +
+            "- Quán nướng Chu - 3 Phạm Ngũ Lão\n" +
+            "- Xiên que vỉa hè Phan Đình Phùng";
+        } else if (food.includes("cơm gà")) {
+          responseText =
+            "🍗 Cơm gà ngon ở Đà Lạt:\n" +
+            "- Cơm gà Tam Nguyên - 21 Nguyễn Văn Trỗi\n" +
+            "- Cơm gà Hải Nam - 12 Bà Triệu";
+        } else if (food.includes("kem")) {
+          responseText =
+            "🍦 Quán kem ở Đà Lạt:\n" +
+            "- Kem bơ Thanh Thảo - 76 Nguyễn Văn Trỗi\n" +
+            "- Kem Phụng - 97A Nguyễn Văn Trỗi\n" +
+            "- Kem dâu tươi - Chợ Đà Lạt";
+        } else if (food.includes("chè")) {
+          responseText =
+            "🍵 Quán chè ngon:\n" +
+            "- Chè Hé - 11A 3/2\n" +
+            "- Chè Như Ý - 102A Nguyễn Văn Trỗi";
+        } else if (food.includes("sữa đậu nành")) {
+          responseText =
+            "🥛 Sữa đậu nành nóng nổi tiếng:\n" +
+            "- Quán Hoa Sữa - cạnh chợ Đêm\n" +
+            "- Sữa đậu nành Dì Lan - Nguyễn Thị Minh Khai";
+        } else if (food.includes("bánh bao") || food.includes("bánh ngọt")) {
+          responseText =
+            "🥟 Bánh bao, bánh ngọt:\n" +
+            "- Tiệm bánh Cối Xay Gió - 1A Hòa Bình\n" +
+            "- Bánh ngọt Liên Hoa - 15-17 3/2\n" +
+            "- Bánh bao Như Ý - 45 Hai Bà Trưng";
         } else {
           responseText =
             "🍲 Đặc sản nổi bật:\n- Bánh căn Nhà Chung\n- Lẩu gà lá é Tao Ngộ\n- Nem nướng Bà Hùng\n- Kem bơ Thanh Thảo\n- Bánh mì xíu mại Hoàng Diệu";

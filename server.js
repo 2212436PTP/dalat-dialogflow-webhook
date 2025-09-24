@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 app.post("/webhook", (req, res) => {
   try {
     const intent = req.body.queryResult.intent.displayName;
-    const queryText = req.body.queryResult.queryText; // user text/chip
+    const queryText = req.body.queryResult.queryText;
 
     console.log("👉 Intent:", intent);
     console.log("👉 QueryText:", queryText);
@@ -28,7 +28,7 @@ app.post("/webhook", (req, res) => {
     ];
 
     // ======================
-    // Intent chính
+    // Xử lý intent chính
     // ======================
     switch (intent) {
       case "find_place":
@@ -82,10 +82,11 @@ app.post("/webhook", (req, res) => {
     }
 
     // ======================
-    // Fallback theo queryText (chips)
+    // Fallback: xử lý queryText (chips)
     // ======================
     if (intent === "Default Fallback Intent" || !responseText) {
       switch (queryText) {
+        // ==== Chips chính ====
         case "📍 Địa điểm nổi bật":
         case "Địa điểm nổi bật":
           responseText =
@@ -129,33 +130,6 @@ app.post("/webhook", (req, res) => {
           ];
           break;
 
-        case "2 ngày 1 đêm":
-        case "2N1Đ":
-          responseText =
-            "📅 Lịch trình 2N1Đ:\n\n" +
-            "🏨 Ở: Homestay Nắng (gần trung tâm)\n" +
-            "🍲 Ăn: Lẩu gà lá é, Bánh căn Nhà Chung\n" +
-            "📸 Đi: Langbiang, Hồ Xuân Hương, Chợ đêm";
-          break;
-
-        case "3 ngày 2 đêm":
-        case "3N2Đ":
-          responseText =
-            "📅 Lịch trình 3N2Đ:\n\n" +
-            "🏨 Ở: Khách sạn Roy Villa\n" +
-            "🥘 Ăn: Nem nướng Bà Hùng, Lẩu bò Ba Toa\n" +
-            "📸 Đi: Quảng trường Lâm Viên, Nhà thờ Con Gà, Langbiang, Thác Datanla, Đồi chè Cầu Đất";
-          break;
-
-        case "4 ngày 3 đêm":
-        case "4N3Đ":
-          responseText =
-            "📅 Lịch trình 4N3Đ:\n\n" +
-            "🏨 Ở: Dalat Palace Hotel\n" +
-            "🍲 Ăn: Lẩu gà lá é, BBQ Fungi Chingu, Kem bơ Thanh Thảo\n" +
-            "📸 Đi: Langbiang, Thung lũng Tình Yêu, Thác Pongour, Đồi chè Cầu Đất, Làng Cù Lần, Chùa Linh Phước";
-          break;
-
         case "🎟️ Giá vé tham quan":
         case "Giá vé tham quan":
           responseText =
@@ -165,6 +139,67 @@ app.post("/webhook", (req, res) => {
             "🏞️ Thác Datanla - QL20 Prenn: 50.000đ\n" +
             "🌄 Thung lũng Tình Yêu - Mai Anh Đào: 100.000đ\n" +
             "🚉 Ga Đà Lạt - Quang Trung: 10.000đ";
+          break;
+
+        // ==== Chips phụ lịch trình ====
+        case "2 ngày 1 đêm":
+        case "2N1Đ":
+          responseText =
+            "📅 Lịch trình 2N1Đ:\n\n" +
+            "🌞 Ngày 1:\n" +
+            "- Sáng: Quảng trường Lâm Viên, Hồ Xuân Hương\n" +
+            "- Trưa: Lẩu gà lá é Tao Ngộ\n" +
+            "- Chiều: Núi Langbiang\n" +
+            "- Tối: Nem nướng Bà Hùng, dạo Chợ đêm\n\n" +
+            "🌞 Ngày 2:\n" +
+            "- Sáng: Vườn hoa thành phố\n" +
+            "- Trưa: Bánh căn Nhà Chung\n" +
+            "- Chiều: Thác Datanla, về trung tâm";
+          break;
+
+        case "3 ngày 2 đêm":
+        case "3N2Đ":
+          responseText =
+            "📅 Lịch trình 3N2Đ:\n\n" +
+            "🌞 Ngày 1:\n" +
+            "- Sáng: Quảng trường Lâm Viên, Nhà thờ Con Gà\n" +
+            "- Trưa: Lẩu bò Ba Toa\n" +
+            "- Chiều: Núi Langbiang\n" +
+            "- Tối: Dạo Chợ đêm\n\n" +
+            "🌞 Ngày 2:\n" +
+            "- Sáng: Thác Datanla\n" +
+            "- Trưa: Nem nướng Bà Hùng\n" +
+            "- Chiều: Đồi chè Cầu Đất\n" +
+            "- Tối: BBQ Fungi Chingu\n\n" +
+            "🌞 Ngày 3:\n" +
+            "- Sáng: Thung lũng Tình Yêu\n" +
+            "- Trưa: Cơm gà Tam Nguyên\n" +
+            "- Chiều: Ga Đà Lạt, mua đặc sản";
+          break;
+
+        case "4 ngày 3 đêm":
+        case "4N3Đ":
+          responseText =
+            "📅 Lịch trình 4N3Đ:\n\n" +
+            "🌞 Ngày 1:\n" +
+            "- Sáng: Quảng trường Lâm Viên, Hồ Xuân Hương\n" +
+            "- Trưa: Lẩu gà lá é Tao Ngộ\n" +
+            "- Chiều: Núi Langbiang\n" +
+            "- Tối: Dạo Chợ đêm, ăn vặt bánh tráng nướng\n\n" +
+            "🌞 Ngày 2:\n" +
+            "- Sáng: Vườn hoa thành phố\n" +
+            "- Trưa: Nem nướng Bà Hùng\n" +
+            "- Chiều: Thác Datanla, máng trượt\n" +
+            "- Tối: Lẩu bò Ba Toa\n\n" +
+            "🌞 Ngày 3:\n" +
+            "- Sáng: Đồi chè Cầu Đất\n" +
+            "- Trưa: Picnic tại đồi chè\n" +
+            "- Chiều: Làng Cù Lần\n" +
+            "- Tối: BBQ Fungi Chingu\n\n" +
+            "🌞 Ngày 4:\n" +
+            "- Sáng: Thung lũng Tình Yêu\n" +
+            "- Trưa: Cơm lam, gà nướng\n" +
+            "- Chiều: Chùa Linh Phước, mua đặc sản";
           break;
       }
     }

@@ -31,31 +31,6 @@ app.post("/webhook", (req, res) => {
     // Intent chính
     // ======================
     switch (intent) {
-      case "user_intention": {
-        // Danh sách responses đa dạng
-        const responses = [
-          "🤔 Bạn đang tìm thông tin gì vậy?\n- 📍 Địa điểm nổi bật\n- 🍲 Món ăn đặc sản\n- ⏰ Giờ mở cửa\n- 📅 Lịch trình du lịch\n- 🎟️ Giá vé tham quan\n👉 Hãy chọn một trong các chủ đề trên nhé!",
-          "Mình có thể hỗ trợ bạn với:\n📍 Địa điểm du lịch | 🍲 Món ăn đặc sản | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\n👉 Bạn muốn tìm hiểu mục nào?",
-          "Bạn muốn biết về:\n- 📍 Chỗ đi chơi\n- 🍲 Ăn uống\n- ⏰ Giờ giấc tham quan\n- 📅 Lịch trình đi Đà Lạt\n- 🎟️ Giá vé\n👉 Chọn một để mình gợi ý nhé!",
-          "😉 Mình đoán bạn quan tâm đến một trong các thông tin sau:\n📍 Địa điểm | 🍲 Món ăn | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\n👉 Bạn cần thông tin nào nè?",
-          "Bạn muốn hỏi về điều gì trong chuyến đi?\n- 📍 Địa điểm nổi bật\n- 🍲 Món ăn đặc sản\n- ⏰ Giờ mở cửa\n- 📅 Lịch trình du lịch\n- 🎟️ Giá vé tham quan",
-          "👉 Có phải bạn muốn mình gợi ý:\n📍 Địa điểm tham quan | 🍲 Món ăn đặc sản | ⏰ Giờ mở cửa | 📅 Lịch trình | 🎟️ Giá vé\nBạn chọn nhé!"
-        ];
-
-        // Lấy ngẫu nhiên 1 response
-        responseText = responses[Math.floor(Math.random() * responses.length)];
-
-        // Gợi ý chips
-        chips = [
-          { text: "📍 Địa điểm nổi bật" },
-          { text: "🍲 Món ăn đặc sản" },
-          { text: "⏰ Giờ mở cửa" },
-          { text: "📅 Lịch trình du lịch" },
-          { text: "🎟️ Giá vé tham quan" }
-        ];
-        break;
-      }
-
       case "find_place": {
         const q = queryText.toLowerCase();
 
@@ -301,6 +276,87 @@ app.post("/webhook", (req, res) => {
           "- Chiều: Chùa Linh Phước\n" +
           "- Tối: Mua đặc sản mang về";
         break;
+
+      case "user_intention": {
+        const query = req.body.queryResult.queryText.toLowerCase();
+
+        if (query.includes("giá vé") || query.includes("bao nhiêu") || query.includes("vé")) {
+          responseText = 
+            "🎟️ Giá vé tham quan Đà Lạt:\n" +
+            "- Langbiang: 30.000đ\n" +
+            "- Vườn hoa thành phố: 50.000đ\n" +
+            "- Thác Datanla: 50.000đ\n" +
+            "- Thung lũng Tình Yêu: 100.000đ\n" +
+            "- Ga Đà Lạt: 10.000đ";
+        } 
+        
+        else if (query.includes("2 ngày 1 đêm") || query.includes("2n1đ")) {
+          responseText = 
+            "📅 Lịch trình 2 ngày 1 đêm:\n" +
+            "Ngày 1: Sáng Langbiang, trưa cơm lam gà nướng, chiều hồ Xuân Hương – chợ đêm.\n" +
+            "Ngày 2: Sáng Thác Datanla, trưa đặc sản Đà Lạt, chiều café view đẹp.";
+        } 
+        
+        else if (query.includes("3 ngày 2 đêm") || query.includes("3n2đ")) {
+          responseText = 
+            "📅 Lịch trình 3 ngày 2 đêm:\n" +
+            "Ngày 1: Quảng trường Lâm Viên, Hồ Xuân Hương, chợ đêm.\n" +
+            "Ngày 2: Langbiang – Thác Datanla – Thiền viện Trúc Lâm.\n" +
+            "Ngày 3: Đồi chè Cầu Đất, café Mê Linh, mua sắm đặc sản.";
+        } 
+        
+        else if (query.includes("4 ngày 3 đêm") || query.includes("4n3đ")) {
+          responseText = 
+            "📅 Lịch trình 4 ngày 3 đêm:\n" +
+            "Ngày 1: Quảng trường Lâm Viên, Hồ Xuân Hương, chợ đêm.\n" +
+            "Ngày 2: Langbiang – Thác Datanla – Thiền viện Trúc Lâm.\n" +
+            "Ngày 3: Đồi chè Cầu Đất – Làng Cù Lần – Thung lũng Tình Yêu.\n" +
+            "Ngày 4: Tham quan vườn hoa, mua sắm đặc sản, café chill.";
+        } 
+        
+        else if (query.includes("địa điểm") || query.includes("chơi") || query.includes("check-in")) {
+          responseText = 
+            "📍 Địa điểm nổi bật ở Đà Lạt:\n" +
+            "- Hồ Xuân Hương\n" +
+            "- Quảng trường Lâm Viên\n" +
+            "- Langbiang\n" +
+            "- Thác Datanla\n" +
+            "- Vườn hoa thành phố";
+        } 
+        
+        else if (query.includes("ăn") || query.includes("món") || query.includes("quán") || query.includes("cafe")) {
+          responseText = 
+            "🍲 Món ăn đặc sản gợi ý:\n" +
+            "- Bánh căn Nhà Chung\n" +
+            "- Nem nướng Bà Hùng\n" +
+            "- Lẩu gà lá é Tao Ngộ\n" +
+            "- Bánh tráng nướng Nguyễn Văn Trỗi\n" +
+            "- Café Mê Linh, An Café, Horizon";
+        } 
+        
+        else if (query.includes("giờ mở cửa") || query.includes("mấy giờ") || query.includes("open")) {
+          responseText = 
+            "⏰ Giờ mở cửa tham khảo:\n" +
+            "- Langbiang: 7h – 17h\n" +
+            "- Thác Datanla: 7h – 17h\n" +
+            "- Vườn hoa thành phố: 7h – 18h\n" +
+            "- Chợ đêm Đà Lạt: từ 17h đến khuya";
+        } 
+        
+        else {
+          responseText = "🤔 Bạn muốn biết về địa điểm, món ăn, giờ mở cửa, lịch trình hay giá vé?";
+        }
+
+        // Trả lời kèm chips
+        chips = [
+          { text: "📍 Địa điểm nổi bật" },
+          { text: "🍲 Món ăn đặc sản" },
+          { text: "⏰ Giờ mở cửa" },
+          { text: "📅 Lịch trình du lịch" },
+          { text: "🎟️ Giá vé tham quan" }
+        ];
+        break;
+      }
     }
 
     res.json({

@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // ===================================
-// HÀM HELPER ĐỂ GỬI RESPONSE KÈM CHIPS (Giữ nguyên)
+// HÀM HELPER ĐỂ GỬI RESPONSE KÈM CHIPS
 // ===================================
 const createResponseWithChips = (responseText, chips = []) => {
     let fulfillmentMessages = [
@@ -56,24 +56,65 @@ app.post("/webhook", (req, res) => {
             { text: "🍲 Món ăn đặc sản" },
             { text: "⏰ Giờ mở cửa" },
             { text: "📅 Lịch trình du lịch" },
-            { text: "🎟️ Giá vé tham quan" }
+            { text: "🎟️ Giá vé tham quan" },
+            // === CHIPS MỚI ĐƯỢC THÊM VÀO ===
+            { text: "🛌 Chỗ ở giá rẻ" },
+            { text: "🛵 Thuê xe máy" }
+            // =============================
         ];
         
-        // Chips chính cho Fallback/Welcome
+        // Chips chính cho Fallback/Welcome (Đã cập nhật)
         const mainChips = [
             { text: "📍 Địa điểm nổi bật" },
             { text: "🍲 Món ăn đặc sản" },
-            { text: "📅 Lịch trình du lịch" }
+            { text: "📅 Lịch trình du lịch" },
+            { text: "🛌 Chỗ ở giá rẻ" },
+            { text: "🛵 Thuê xe máy" }
         ];
-
 
         // ======================
         // Intent chính
         // ======================
         switch (intent) {
+            
+            // ===================================
+            // 🛌 INTENT MỚI: TÌM CHỖ Ở GIÁ RẺ
+            // ===================================
+            case "tim_cho_o_gia_re": {
+                responseText = 
+                    "🛌 Dưới đây là gợi ý **Homestay/Khách sạn giá rẻ** (dưới 500k/đêm):\n" +
+                    "- **Dalat Backpackers**: Chỉ từ 150.000 VNĐ/giường.\n" +
+                    "- **YOLO Camp Site**: Giá phòng từ 400.000 VNĐ/đêm.\n" +
+                    "- **The Hobbit Home**: Homestay giá trung bình 350.000 VNĐ/đêm.";
+                // Sau khi trả lời, gợi ý các bước tiếp theo
+                chips = [
+                    { text: "Gần trung tâm" },
+                    { text: "Homestay view đẹp" },
+                    { text: "Thuê xe máy" }
+                ];
+                break;
+            }
+
+            // ===================================
+            // 🛵 INTENT MỚI: THUÊ XE MÁY
+            // ===================================
+            case "thue_xe_may": {
+                responseText = 
+                    "🛵 Giá **thuê xe máy** tại Đà Lạt:\n" +
+                    "- **Xe số** (Wave/Sirius): Khoảng **100.000 - 120.000 VNĐ/ngày**.\n" +
+                    "- **Xe tay ga** (Vision/Lead): Khoảng **130.000 - 150.000 VNĐ/ngày**.\n" +
+                    "Bạn muốn mình gợi ý **chỗ thuê xe gần chợ** không?";
+                // Sau khi trả lời, gợi ý các bước tiếp theo
+                chips = [
+                    { text: "Địa chỉ thuê xe gần chợ" },
+                    { text: "Lịch trình du lịch" }
+                ];
+                break;
+            }
+
             case "find_place": {
                 const q = queryText.toLowerCase();
-                 // ... (Logic find_place giữ nguyên)
+                // ... (Logic find_place giữ nguyên)
                 if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
                     responseText =
                         "☕ Quán cà phê view đẹp ở Đà Lạt:\n" +
@@ -130,13 +171,13 @@ app.post("/webhook", (req, res) => {
 
             case "food_recommendation": {
                 const food = queryText.toLowerCase();
-                 // ... (Logic food_recommendation giữ nguyên)
+                // ... (Logic food_recommendation giữ nguyên)
                 if (food.includes("bánh căn")) {
                     responseText =
                         "🥞 Bánh căn:\n- Bánh căn Nhà Chung - 1 Nhà Chung\n- Bánh căn Lệ - 27/44 Yersin";
                 } else if (food.includes("lẩu")) {
                     responseText =
-                        "🍲 Lẩu ngon:\n- Lẩu bò Ba Toa - 1/29 Hoàng Diệu\n- Lẩu gà lá é Tao Ngộ - 27 Lê Đại Hành\n- Lẩu dê Lâm Ký - 2 Hoàng Diệu";
+                        "🍲 Lẩu ngon:\n- Lẩu bò Ba Toa - 1/29 Hoàng Diệu\n- Lẩu gà lá é Tao Ngộ - 27 Lê Đại Hành\n- Lẩu dê Lâm Ký - 2 Hoàng Văn Thụ";
                 } else if (food.includes("nem nướng")) {
                     responseText =
                         "🥗 Nem nướng:\n- Bà Hùng - 328 Phan Đình Phùng\n- Dũng Lộc - 254 Phan Đình Phùng";
@@ -393,7 +434,10 @@ app.post("/webhook", (req, res) => {
                     { text: "🍲 Món ăn đặc sản" },
                     { text: "⏰ Giờ mở cửa" },
                     { text: "📅 Lịch trình du lịch" },
-                    { text: "🎟️ Giá vé tham quan" }
+                    { text: "🎟️ Giá vé tham quan" },
+                    // Thêm chips tìm chỗ ở và thuê xe máy vào đây
+                    { text: "🛌 Chỗ ở giá rẻ" },
+                    { text: "🛵 Thuê xe máy" }
                 ];
                 break;
             }
@@ -402,7 +446,7 @@ app.post("/webhook", (req, res) => {
             // SỬA LỖI: DEFAULT WELCOME INTENT
             // ===================================
             case "Default Welcome Intent":
-                // Khi người dùng chào, chatbot nên trả lời bằng câu chào mừng và các chips chính
+                // Bắt Intent Welcome để hiển thị chips chính và câu chào
                 responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
                 chips = mainChips; // Gửi 3 chips chính
                 break;
@@ -411,7 +455,7 @@ app.post("/webhook", (req, res) => {
             // SỬA LỖI: DEFAULT FALLBACK INTENT
             // ===================================
             case "Default Fallback Intent":
-                // Khi bot không hiểu, trả lời bằng câu hỏi gợi ý và chips chính
+                // Trả lời khi bot không hiểu và hiển thị chips chính
                 responseText = "Xin lỗi, mình chưa hiểu ý bạn lắm. Bạn muốn hỏi về **Địa điểm**, **Món ăn**, **Lịch trình** hay **Chỗ ở** ạ?";
                 chips = mainChips; // Gửi 3 chips chính
                 break;

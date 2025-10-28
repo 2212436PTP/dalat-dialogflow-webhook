@@ -7,9 +7,9 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // ===================================
-// HÀM HELPER ĐỂ GỬI RESPONSE KÈM CHIPS
+// HÀM HELPER ĐỂ GỬI RESPONSE KÈM CHIPS (Giữ nguyên)
 // ===================================
-const createResponseWithChips = (responseText, chips = [], contextOut = []) => {
+const createResponseWithChips = (responseText, chips = []) => {
     let fulfillmentMessages = [
         { text: { text: [responseText] } }
     ];
@@ -27,14 +27,10 @@ const createResponseWithChips = (responseText, chips = [], contextOut = []) => {
             }
         });
     }
-    // Trả về Context nếu có
-    if (contextOut.length > 0) {
-        return { fulfillmentMessages, outputContexts: contextOut };
-    }
     return { fulfillmentMessages };
 };
 
-// Hàm này giúp lấy Context (Giữ nguyên)
+// Hàm này giúp lấy Context để xử lý plan_itinerary (Giữ nguyên)
 const getContextParam = (req, paramName, contextName) => {
     const context = req.body.queryResult.outputContexts?.find(c => c.name.includes(contextName));
     return context?.parameters[paramName] || null;
@@ -78,71 +74,10 @@ app.post("/webhook", (req, res) => {
             { text: "🛵 Thuê xe máy" }
         ];
 
-        // Khai báo Context cho Chỗ ở 2 bước
-        const CHO_O_CONTEXT = 'cho_o_gia_re_context';
-        const session = req.body.session; // Lấy session ID
-
-
         // ======================
         // Intent chính
         // ======================
         switch (intent) {
-            
-            // === LOGIC MỚI: BƯỚC 1 - HỎI VỊ TRÍ (CHỖ Ở GIÁ RẺ) ===
-            case "tim_cho_o_gia_re": {
-                responseText = "Bạn muốn tìm chỗ ở giá rẻ ở khu vực nào?";
-                chips = [
-                    { text: "View đồi núi" },
-                    { text: "Gần trung tâm" },
-                    { text: "Xa trung tâm" }
-                ];
-                // Thiết lập Context để Intent con có thể bắt câu trả lời
-                const contextOut = [{ name: `${session}/contexts/${CHO_O_CONTEXT}`, lifespanCount: 2 }];
-                return res.json(createResponseWithChips(responseText, chips, contextOut));
-            }
-            
-            // === LOGIC MỚI: BƯỚC 2 - TRẢ LỜI SAU KHI CHỌN VỊ TRÍ ===
-            case "tim_cho_o_gia_re - tra_loi_vi_tri": {
-                // Lấy giá trị vị trí từ parameter của Intent con
-                const selectedLocation = req.body.queryResult.parameters?.location || 'không rõ';
-                
-                let response = `✅ Gợi ý chỗ ở giá rẻ (dưới 500k) tại khu vực **${selectedLocation.toUpperCase()}**:`;
-
-                if (selectedLocation.includes("trung tâm")) {
-                    response += "\n- **Dalat Backpackers** (Gần Chợ)\n- **The Art Homestay** (Giá TB 300k)";
-                } else if (selectedLocation.includes("đồi núi")) {
-                    response += "\n- **YOLO Camp Site** (View đẹp)\n- **Tre's House** (Ấm cúng, xa trung tâm)";
-                } else if (selectedLocation.includes("xa trung tâm")) {
-                    response += "\n- **The Wilder-nest** (View Hồ Tuyền Lâm)\n- **Nhà nghỉ Xanh** (Giá siêu rẻ)";
-                } else {
-                    response = "Mình xin lỗi, hiện tại mình chỉ có gợi ý cho các khu vực: View đồi núi, Gần trung tâm, hoặc Xa trung tâm.";
-                }
-                
-                responseText = response;
-                chips = [
-                    { text: "Xem giá thuê xe máy" },
-                    { text: "Lịch trình du lịch" }
-                ];
-                // Không gửi Context để hủy Context cũ
-                break;
-            }
-            
-            // === LOGIC MỚI: THUÊ XE MÁY TRẢ LỜI NGAY ===
-            case "thue_xe_may": {
-                responseText = 
-                    "🛵 Giá **thuê xe máy** tại Đà Lạt:\n" +
-                    "- **Xe số** (Wave/Sirius): Khoảng **100.000 - 120.000 VNĐ/ngày**.\n" +
-                    "- **Xe tay ga** (Vision/Lead): Khoảng **130.000 - 150.000 VNĐ/ngày**.\n" +
-                    "Bạn muốn mình gợi ý **chỗ thuê xe gần chợ** không?";
-                chips = [
-                    { text: "Địa chỉ thuê xe gần chợ" },
-                    { text: "Lịch trình du lịch" }
-                ];
-                break;
-            }
-            // ==========================================
-
-
             case "find_place": {
                 if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
                     responseText =
@@ -400,8 +335,7 @@ app.post("/webhook", (req, res) => {
                         "- Ga Đà Lạt: 10.000đ";
                 } 
                 
-                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ (XỬ LÝ TRẢ LỜI NGAY TRONG user_intention nếu không dùng Context) ===
-                // LƯU Ý: Nếu bạn dùng Context, khối này sẽ được kích hoạt bởi Intent "tim_cho_o_gia_re"
+                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ ===
                 else if (query.includes("chỗ ở giá rẻ") || query.includes("chỗ nghỉ rẻ") || query.includes("homestay rẻ")) {
                     responseText = 
                         "🛌 Dưới đây là gợi ý **Homestay/Khách sạn giá rẻ** (dưới 500k/đêm):\n" +

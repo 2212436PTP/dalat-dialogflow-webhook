@@ -335,21 +335,39 @@ app.post("/webhook", (req, res) => {
                         "- Ga Đà Lạt: 10.000đ";
                 } 
                 
-                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ ===
+                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ (ĐÃ CẬP NHẬT) ===
                 else if (query.includes("chỗ ở giá rẻ") || query.includes("chỗ nghỉ rẻ") || query.includes("homestay rẻ")) {
                     responseText = 
-                        "🛌 Dưới đây là gợi ý **Homestay/Khách sạn giá rẻ** (dưới 500k/đêm):\n" +
-                        "- **Dalat Backpackers**: Chỉ từ 150.000 VNĐ/giường.\n" +
-                        "- **YOLO Camp Site**: Giá phòng từ 400.000 VNĐ/đêm.\n" +
-                        "- **The Hobbit Home**: Homestay giá trung bình 350.000 VNĐ/đêm.";
+                        "🛌 Gợi ý chỗ ở giá tốt (dưới 500k/đêm):\n" +
+                        "- **Dalat Backpackers Hostel** (150k/giường dorm, gần trung tâm).\n" +
+                        "- **The Note Homestay** (Khoảng 300k/phòng riêng, yên tĩnh).\n" +
+                        "- **YOLO Camp Site** (Từ 400k/phòng, view đẹp, hơi xa trung tâm).\n" +
+                        "- **The Hobbit Home** (TB 350k/phòng, phong cách độc đáo).\n" +
+                        "Bạn muốn xem thêm homestay gần trung tâm hay view đồi núi không?";
+                    // Gợi ý chips sau khi trả lời
+                    chips = [
+                        { text: "Homestay gần trung tâm" },
+                        { text: "Homestay view đồi núi" },
+                        { text: "🛵 Thuê xe máy" }
+                    ];
                 }
-                // === LOGIC MỚI: THUÊ XE MÁY ===
+                // === LOGIC MỚI: THUÊ XE MÁY (ĐÃ CẬP NHẬT) ===
                 else if (query.includes("thuê xe máy") || query.includes("giá thuê xe")) {
                     responseText = 
-                        "🛵 Giá **thuê xe máy** tại Đà Lạt:\n" +
-                        "- **Xe số** (Wave/Sirius): Khoảng **100.000 - 120.000 VNĐ/ngày**.\n" +
-                        "- **Xe tay ga** (Vision/Lead): Khoảng **130.000 - 150.000 VNĐ/ngày**.\n" +
-                        "Bạn muốn mình gợi ý **chỗ thuê xe gần chợ** không?";
+                        "🛵 **Giá thuê xe máy** tại Đà Lạt:\n" +
+                        "- Xe số (Wave/Sirius): ~100k - 120k/ngày.\n" +
+                        "- Xe tay ga (Vision/Lead): ~130k - 150k/ngày.\n\n" +
+                        "**Một số địa chỉ tham khảo:**\n" +
+                        "- **Thuê xe máy Hoàng Anh:** Gần chợ Đà Lạt (SĐT: 09xx xxx xxx - *thay số thật*).\n" +
+                        "- **Dịch vụ Thuê xe Đà Lạt:** Đường Bùi Thị Xuân (SĐT: 08xx xxx xxx - *thay số thật*).\n" +
+                        "- Nhiều cửa hàng trên đường **Phan Bội Châu**.\n\n" +
+                        "Bạn có cần SĐT cụ thể của chỗ nào không?";
+                     // Gợi ý chips sau khi trả lời
+                    chips = [
+                        { text: "Lấy SĐT Hoàng Anh" },
+                        { text: "Lấy SĐT Bùi Thị Xuân" },
+                        { text: "📅 Lịch trình du lịch" }
+                    ];
                 }
                 // === KẾT THÚC LOGIC MỚI ===
                 
@@ -410,16 +428,18 @@ app.post("/webhook", (req, res) => {
                     responseText = "🤔 Bạn muốn biết về địa điểm, món ăn, giờ mở cửa, lịch trình hay giá vé?";
                 }
 
-                // Trả lời kèm chips
-                chips = [
-                    { text: "📍 Địa điểm nổi bật" },
-                    { text: "🍲 Món ăn đặc sản" },
-                    { text: "⏰ Giờ mở cửa" },
-                    { text: "📅 Lịch trình du lịch" },
-                    { text: "🎟️ Giá vé tham quan" },
-                    { text: "🛌 Chỗ ở giá rẻ" },
-                    { text: "🛵 Thuê xe máy" }
-                ];
+                // Nếu không phải là 2 trường hợp mới thì dùng chips mặc định
+                if (!(query.includes("chỗ ở giá rẻ") || query.includes("thuê xe máy"))){
+                     chips = [
+                        { text: "📍 Địa điểm nổi bật" },
+                        { text: "🍲 Món ăn đặc sản" },
+                        { text: "⏰ Giờ mở cửa" },
+                        { text: "📅 Lịch trình du lịch" },
+                        { text: "🎟️ Giá vé tham quan" },
+                        { text: "🛌 Chỗ ở giá rẻ" },
+                        { text: "🛵 Thuê xe máy" }
+                    ];
+                }
                 break;
             }
             

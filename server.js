@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 // ===================================
 // HÀM HELPER ĐỂ GỬI RESPONSE KÈM CHIPS
 // ===================================
-const createResponseWithChips = (responseText, chips = []) => {
+const createResponseWithChips = (responseText, chips = [], contextOut = []) => {
     let fulfillmentMessages = [
         { text: { text: [responseText] } }
     ];
@@ -27,10 +27,14 @@ const createResponseWithChips = (responseText, chips = []) => {
             }
         });
     }
+    // Trả về Context nếu có
+    if (contextOut.length > 0) {
+        return { fulfillmentMessages, outputContexts: contextOut };
+    }
     return { fulfillmentMessages };
 };
 
-// Hàm này giúp lấy Context để xử lý plan_itinerary (Giữ nguyên)
+// Hàm này giúp lấy Context (Giữ nguyên)
 const getContextParam = (req, paramName, contextName) => {
     const context = req.body.queryResult.outputContexts?.find(c => c.name.includes(contextName));
     return context?.parameters[paramName] || null;
@@ -50,6 +54,8 @@ app.post("/webhook", (req, res) => {
         console.log("👉 QueryText:", queryText);
 
         let responseText = "👋 Xin chào, mình có thể hỗ trợ gì cho chuyến du lịch của bạn?";
+        const q = queryText.toLowerCase(); // Biến này dùng cho logic tìm kiếm queryText
+        
         // Định nghĩa chips cơ bản
         let chips = [
             { text: "📍 Địa điểm nổi bật" },
@@ -57,13 +63,13 @@ app.post("/webhook", (req, res) => {
             { text: "⏰ Giờ mở cửa" },
             { text: "📅 Lịch trình du lịch" },
             { text: "🎟️ Giá vé tham quan" },
-            // === CHIPS MỚI ĐƯỢC THÊM VÀO ===
+            // === CHIPS MỚI ĐÃ THÊM VÀO ===
             { text: "🛌 Chỗ ở giá rẻ" },
             { text: "🛵 Thuê xe máy" }
             // =============================
         ];
         
-        // Chips chính cho Fallback/Welcome (Đã cập nhật)
+        // Chips chính cho Fallback/Welcome
         const mainChips = [
             { text: "📍 Địa điểm nổi bật" },
             { text: "🍲 Món ăn đặc sản" },
@@ -72,49 +78,72 @@ app.post("/webhook", (req, res) => {
             { text: "🛵 Thuê xe máy" }
         ];
 
+        // Khai báo Context cho Chỗ ở 2 bước
+        const CHO_O_CONTEXT = 'cho_o_gia_re_context';
+        const session = req.body.session; // Lấy session ID
+
+
         // ======================
         // Intent chính
         // ======================
         switch (intent) {
             
-            // ===================================
-            // 🛌 INTENT MỚI: TÌM CHỖ Ở GIÁ RẺ
-            // ===================================
+            // === LOGIC MỚI: BƯỚC 1 - HỎI VỊ TRÍ (CHỖ Ở GIÁ RẺ) ===
             case "tim_cho_o_gia_re": {
-                responseText = 
-                    "🛌 Dưới đây là gợi ý **Homestay/Khách sạn giá rẻ** (dưới 500k/đêm):\n" +
-                    "- **Dalat Backpackers**: Chỉ từ 150.000 VNĐ/giường.\n" +
-                    "- **YOLO Camp Site**: Giá phòng từ 400.000 VNĐ/đêm.\n" +
-                    "- **The Hobbit Home**: Homestay giá trung bình 350.000 VNĐ/đêm.";
-                // Sau khi trả lời, gợi ý các bước tiếp theo
+                responseText = "Bạn muốn tìm chỗ ở giá rẻ ở khu vực nào?";
                 chips = [
+                    { text: "View đồi núi" },
                     { text: "Gần trung tâm" },
-                    { text: "Homestay view đẹp" },
-                    { text: "Thuê xe máy" }
+                    { text: "Xa trung tâm" }
                 ];
+                // Thiết lập Context để Intent con có thể bắt câu trả lời
+                const contextOut = [{ name: `${session}/contexts/${CHO_O_CONTEXT}`, lifespanCount: 2 }];
+                return res.json(createResponseWithChips(responseText, chips, contextOut));
+            }
+            
+            // === LOGIC MỚI: BƯỚC 2 - TRẢ LỜI SAU KHI CHỌN VỊ TRÍ ===
+            case "tim_cho_o_gia_re - tra_loi_vi_tri": {
+                // Lấy giá trị vị trí từ parameter của Intent con
+                const selectedLocation = req.body.queryResult.parameters?.location || 'không rõ';
+                
+                let response = `✅ Gợi ý chỗ ở giá rẻ (dưới 500k) tại khu vực **${selectedLocation.toUpperCase()}**:`;
+
+                if (selectedLocation.includes("trung tâm")) {
+                    response += "\n- **Dalat Backpackers** (Gần Chợ)\n- **The Art Homestay** (Giá TB 300k)";
+                } else if (selectedLocation.includes("đồi núi")) {
+                    response += "\n- **YOLO Camp Site** (View đẹp)\n- **Tre's House** (Ấm cúng, xa trung tâm)";
+                } else if (selectedLocation.includes("xa trung tâm")) {
+                    response += "\n- **The Wilder-nest** (View Hồ Tuyền Lâm)\n- **Nhà nghỉ Xanh** (Giá siêu rẻ)";
+                } else {
+                    response = "Mình xin lỗi, hiện tại mình chỉ có gợi ý cho các khu vực: View đồi núi, Gần trung tâm, hoặc Xa trung tâm.";
+                }
+                
+                responseText = response;
+                chips = [
+                    { text: "Xem giá thuê xe máy" },
+                    { text: "Lịch trình du lịch" }
+                ];
+                // Không gửi Context để hủy Context cũ
                 break;
             }
-
-            // ===================================
-            // 🛵 INTENT MỚI: THUÊ XE MÁY
-            // ===================================
+            
+            // === LOGIC MỚI: THUÊ XE MÁY TRẢ LỜI NGAY ===
             case "thue_xe_may": {
                 responseText = 
                     "🛵 Giá **thuê xe máy** tại Đà Lạt:\n" +
                     "- **Xe số** (Wave/Sirius): Khoảng **100.000 - 120.000 VNĐ/ngày**.\n" +
                     "- **Xe tay ga** (Vision/Lead): Khoảng **130.000 - 150.000 VNĐ/ngày**.\n" +
                     "Bạn muốn mình gợi ý **chỗ thuê xe gần chợ** không?";
-                // Sau khi trả lời, gợi ý các bước tiếp theo
                 chips = [
                     { text: "Địa chỉ thuê xe gần chợ" },
                     { text: "Lịch trình du lịch" }
                 ];
                 break;
             }
+            // ==========================================
+
 
             case "find_place": {
-                const q = queryText.toLowerCase();
-                // ... (Logic find_place giữ nguyên)
                 if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
                     responseText =
                         "☕ Quán cà phê view đẹp ở Đà Lạt:\n" +
@@ -171,7 +200,7 @@ app.post("/webhook", (req, res) => {
 
             case "food_recommendation": {
                 const food = queryText.toLowerCase();
-                // ... (Logic food_recommendation giữ nguyên)
+
                 if (food.includes("bánh căn")) {
                     responseText =
                         "🥞 Bánh căn:\n- Bánh căn Nhà Chung - 1 Nhà Chung\n- Bánh căn Lệ - 27/44 Yersin";
@@ -365,11 +394,30 @@ app.post("/webhook", (req, res) => {
                     responseText = 
                         "🎟️ Giá vé tham quan Đà Lạt:\n" +
                         "- Langbiang: 30.000đ\n" +
-                        "- Vườn hoa thành phố: 50.000đ\n" +
+                        "- Vườn hoa TP: 50.000đ\n" +
                         "- Thác Datanla: 50.000đ\n" +
                         "- Thung lũng Tình Yêu: 100.000đ\n" +
                         "- Ga Đà Lạt: 10.000đ";
                 } 
+                
+                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ (XỬ LÝ TRẢ LỜI NGAY TRONG user_intention nếu không dùng Context) ===
+                // LƯU Ý: Nếu bạn dùng Context, khối này sẽ được kích hoạt bởi Intent "tim_cho_o_gia_re"
+                else if (query.includes("chỗ ở giá rẻ") || query.includes("chỗ nghỉ rẻ") || query.includes("homestay rẻ")) {
+                    responseText = 
+                        "🛌 Dưới đây là gợi ý **Homestay/Khách sạn giá rẻ** (dưới 500k/đêm):\n" +
+                        "- **Dalat Backpackers**: Chỉ từ 150.000 VNĐ/giường.\n" +
+                        "- **YOLO Camp Site**: Giá phòng từ 400.000 VNĐ/đêm.\n" +
+                        "- **The Hobbit Home**: Homestay giá trung bình 350.000 VNĐ/đêm.";
+                }
+                // === LOGIC MỚI: THUÊ XE MÁY ===
+                else if (query.includes("thuê xe máy") || query.includes("giá thuê xe")) {
+                    responseText = 
+                        "🛵 Giá **thuê xe máy** tại Đà Lạt:\n" +
+                        "- **Xe số** (Wave/Sirius): Khoảng **100.000 - 120.000 VNĐ/ngày**.\n" +
+                        "- **Xe tay ga** (Vision/Lead): Khoảng **130.000 - 150.000 VNĐ/ngày**.\n" +
+                        "Bạn muốn mình gợi ý **chỗ thuê xe gần chợ** không?";
+                }
+                // === KẾT THÚC LOGIC MỚI ===
                 
                 else if (query.includes("2 ngày 1 đêm") || query.includes("2n1đ")) {
                     responseText = 
@@ -435,7 +483,6 @@ app.post("/webhook", (req, res) => {
                     { text: "⏰ Giờ mở cửa" },
                     { text: "📅 Lịch trình du lịch" },
                     { text: "🎟️ Giá vé tham quan" },
-                    // Thêm chips tìm chỗ ở và thuê xe máy vào đây
                     { text: "🛌 Chỗ ở giá rẻ" },
                     { text: "🛵 Thuê xe máy" }
                 ];
@@ -443,21 +490,12 @@ app.post("/webhook", (req, res) => {
             }
             
             // ===================================
-            // SỬA LỖI: DEFAULT WELCOME INTENT
+            // SỬA LỖI: DEFAULT WELCOME/FALLBACK
             // ===================================
             case "Default Welcome Intent":
-                // Bắt Intent Welcome để hiển thị chips chính và câu chào
-                responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
-                chips = mainChips; // Gửi 3 chips chính
-                break;
-            
-            // ===================================
-            // SỬA LỖI: DEFAULT FALLBACK INTENT
-            // ===================================
             case "Default Fallback Intent":
-                // Trả lời khi bot không hiểu và hiển thị chips chính
-                responseText = "Xin lỗi, mình chưa hiểu ý bạn lắm. Bạn muốn hỏi về **Địa điểm**, **Món ăn**, **Lịch trình** hay **Chỗ ở** ạ?";
-                chips = mainChips; // Gửi 3 chips chính
+                responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
+                chips = mainChips; // Gửi 5 chips chính (bao gồm chỗ ở và xe máy)
                 break;
             // ... (Giữ nguyên các case khác) ...
         }

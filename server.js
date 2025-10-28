@@ -51,7 +51,7 @@ app.post("/webhook", (req, res) => {
 
         let responseText = "👋 Xin chào, mình có thể hỗ trợ gì cho chuyến du lịch của bạn?";
         const q = queryText.toLowerCase(); // Biến này dùng cho logic tìm kiếm queryText
-        
+
         // Định nghĩa chips cơ bản
         let chips = [
             { text: "📍 Địa điểm nổi bật" },
@@ -59,12 +59,10 @@ app.post("/webhook", (req, res) => {
             { text: "⏰ Giờ mở cửa" },
             { text: "📅 Lịch trình du lịch" },
             { text: "🎟️ Giá vé tham quan" },
-            // === CHIPS MỚI ĐÃ THÊM VÀO ===
             { text: "🛌 Chỗ ở giá rẻ" },
             { text: "🛵 Thuê xe máy" }
-            // =============================
         ];
-        
+
         // Chips chính cho Fallback/Welcome
         const mainChips = [
             { text: "📍 Địa điểm nổi bật" },
@@ -79,6 +77,7 @@ app.post("/webhook", (req, res) => {
         // ======================
         switch (intent) {
             case "find_place": {
+                // --- LOGIC GỐC CỦA BẠN ---
                 if (q.includes("cà phê") || q.includes("coffee") || q.includes("quán")) {
                     responseText =
                         "☕ Quán cà phê view đẹp ở Đà Lạt:\n" +
@@ -92,12 +91,20 @@ app.post("/webhook", (req, res) => {
                         "- Dalat Lacasa - 59 Nam Kỳ Khởi Nghĩa\n" +
                         "- The Art - 30 Trần Bình Trọng\n" +
                         "- Bonjour Homestay - 15 Nam Hồ";
-                } else if (q.includes("homestay")) {
+                } else if (q.includes("homestay")) { // Logic này sẽ chạy cho "Homestay view đồi núi"
                     responseText =
                         "🏡 Homestay đẹp & giá hợp lý:\n" +
                         "- The Wilder-nest - Hồ Tuyền Lâm\n" +
                         "- Tre's House - Trần Hưng Đạo\n" +
                         "- LengKeng Homestay - Làng hoa Vạn Thành";
+                     // THÊM: Xử lý cụ thể cho "view đồi núi" nếu cần
+                     if (q.includes("view đồi núi")) {
+                         responseText =
+                            "🏡 Homestay view đồi núi đẹp:\n" +
+                            "- The Wilder-nest - Hồ Tuyền Lâm\n" +
+                            "- Hai Ả Homestay - Đồi Đa Phú\n" +
+                            "- The Kupid - Đồi Robin";
+                     }
                 } else if (q.includes("chợ") && q.includes("đêm")) {
                     responseText =
                         "🌙 Chợ đêm Đà Lạt (Chợ Âm Phủ) nằm ngay trung tâm TP, hoạt động từ 17h đến 22h, nổi tiếng với đồ ăn vặt và quà lưu niệm.";
@@ -121,7 +128,7 @@ app.post("/webhook", (req, res) => {
                         "- Cánh đồng hoa Cẩm Tú Cầu\n" +
                         "- Nông trại Puppy Farm\n" +
                         "- Vườn hoa thành phố";
-                } else {
+                } else { // Logic này sẽ chạy cho "Chỗ ở", "Nghỉ ngơi"
                     responseText =
                         "📍 Một số địa điểm nổi bật:\n" +
                         "✨ Quảng trường Lâm Viên\n" +
@@ -130,9 +137,11 @@ app.post("/webhook", (req, res) => {
                         "🌺 Vườn hoa TP\n" +
                         "🏞️ Thác Datanla";
                 }
+                // --- KẾT THÚC LOGIC GỐC ---
                 break;
             }
 
+            // --- CÁC CASE KHÁC GIỮ NGUYÊN ---
             case "food_recommendation": {
                 const food = queryText.toLowerCase();
 
@@ -223,10 +232,9 @@ app.post("/webhook", (req, res) => {
                         "🍲 Đặc sản nổi bật:\n- Bánh căn Nhà Chung\n- Lẩu gà lá é Tao Ngộ\n- Nem nướng Bà Hùng\n- Kem bơ Thanh Thảo\n- Bánh mì xíu mại Hoàng Diệu";
                 }
                 break;
-            }
-
-            case "opening_hours":
-                responseText =
+             }
+            case "opening_hours": {
+                 responseText =
                     "⏰ Giờ mở cửa:\n\n" +
                     "⛰️ Langbiang: 7:00 - 17:00\n" +
                     "🌺 Vườn hoa TP: 7:30 - 17:00\n" +
@@ -234,18 +242,18 @@ app.post("/webhook", (req, res) => {
                     "🏯 Đường hầm đất sét: 7:00 - 17:00\n" +
                     "🌙 Chợ đêm: 17:00 - 22:00";
                 break;
-
-            case "plan_itinerary":
-                responseText = "Bạn muốn đi mấy ngày?";
+            }
+            case "plan_itinerary": {
+                 responseText = "Bạn muốn đi mấy ngày?";
                 chips = [
                     { text: "2 ngày 1 đêm" },
                     { text: "3 ngày 2 đêm" },
                     { text: "4 ngày 3 đêm" }
                 ];
                 break;
-
-            case "ticket_price":
-                responseText =
+            }
+            case "ticket_price": {
+                 responseText =
                     "🎟️ Giá vé:\n\n" +
                     "⛰️ Langbiang: 30.000đ\n" +
                     "🌺 Vườn hoa TP: 50.000đ\n" +
@@ -253,14 +261,9 @@ app.post("/webhook", (req, res) => {
                     "🌄 Thung lũng Tình Yêu: 100.000đ\n" +
                     "🚉 Ga Đà Lạt: 10.000đ";
                 break;
-
-            // ======================
-            // Itinerary chi tiết
-            // ======================
-            case "itinerary_2d1n":
-            case "2 ngày 1 đêm":
-            case "2N1Đ":
-                responseText =
+            }
+            case "itinerary_2d1n": case "2 ngày 1 đêm": case "2N1Đ": {
+                 responseText =
                     "📅 Lịch trình 2N1Đ:\n\n" +
                     "🌞 Ngày 1:\n" +
                     "- Sáng: Quảng trường Lâm Viên, Hồ Xuân Hương\n" +
@@ -272,11 +275,9 @@ app.post("/webhook", (req, res) => {
                     "- Trưa: Bánh căn Nhà Chung\n" +
                     "- Chiều: Thác Datanla, quay lại trung tâm";
                 break;
-
-            case "itinerary_3d2n":
-            case "3 ngày 2 đêm":
-            case "3N2Đ":
-                responseText =
+            }
+            case "itinerary_3d2n": case "3 ngày 2 đêm": case "3N2Đ": {
+                 responseText =
                     "📅 Lịch trình 3N2Đ:\n\n" +
                     "🌞 Ngày 1:\n" +
                     "- Sáng: Quảng trường Lâm Viên, Nhà thờ Con Gà\n" +
@@ -294,11 +295,9 @@ app.post("/webhook", (req, res) => {
                     "- Chiều: Ga Đà Lạt\n" +
                     "- Tối: Mua đặc sản";
                 break;
-
-            case "itinerary_4d3n":
-            case "4 ngày 3 đêm":
-            case "4N3Đ":
-                responseText =
+            }
+            case "itinerary_4d3n": case "4 ngày 3 đêm": case "4N3Đ": {
+                 responseText =
                     "📅 Lịch trình 4N3Đ:\n\n" +
                     "🌞 Ngày 1:\n" +
                     "- Sáng: Quảng trường Lâm Viên, Hồ Xuân Hương\n" +
@@ -321,109 +320,96 @@ app.post("/webhook", (req, res) => {
                     "- Chiều: Chùa Linh Phước\n" +
                     "- Tối: Mua đặc sản mang về";
                 break;
-
+            }
             case "user_intention": {
                 const query = req.body.queryResult.queryText.toLowerCase();
 
                 if (query.includes("giá vé") || query.includes("bao nhiêu") || query.includes("vé")) {
-                    responseText = 
+                    responseText =
                         "🎟️ Giá vé tham quan Đà Lạt:\n" +
                         "- Langbiang: 30.000đ\n" +
                         "- Vườn hoa TP: 50.000đ\n" +
                         "- Thác Datanla: 50.000đ\n" +
                         "- Thung lũng Tình Yêu: 100.000đ\n" +
                         "- Ga Đà Lạt: 10.000đ";
-                } 
-                
-                // === LOGIC MỚI: CHỖ Ở GIÁ RẺ (ĐÃ CẬP NHẬT) ===
+                }
                 else if (query.includes("chỗ ở giá rẻ") || query.includes("chỗ nghỉ rẻ") || query.includes("homestay rẻ")) {
-                    responseText = 
+                    responseText =
                         "🛌 Gợi ý chỗ ở giá tốt (dưới 500k/đêm):\n" +
                         "- **Dalat Backpackers Hostel** (150k/giường dorm, gần trung tâm).\n" +
                         "- **The Note Homestay** (Khoảng 300k/phòng riêng, yên tĩnh).\n" +
                         "- **YOLO Camp Site** (Từ 400k/phòng, view đẹp, hơi xa trung tâm).\n" +
                         "- **The Hobbit Home** (TB 350k/phòng, phong cách độc đáo).\n" +
                         "Bạn muốn xem thêm homestay gần trung tâm hay view đồi núi không?";
-                    // Gợi ý chips sau khi trả lời
                     chips = [
                         { text: "Homestay gần trung tâm" },
                         { text: "Homestay view đồi núi" },
                         { text: "🛵 Thuê xe máy" }
                     ];
                 }
-                // === LOGIC MỚI: THUÊ XE MÁY (ĐÃ CẬP NHẬT) ===
                 else if (query.includes("thuê xe máy") || query.includes("giá thuê xe")) {
-                    responseText = 
+                    responseText =
                         "🛵 **Giá thuê xe máy** tại Đà Lạt:\n" +
                         "- Xe số (Wave/Sirius): ~100k - 120k/ngày.\n" +
                         "- Xe tay ga (Vision/Lead): ~130k - 150k/ngày.\n\n" +
                         "**Một số địa chỉ tham khảo:**\n" +
-                        "- **Thuê xe máy Hoàng Anh:** Gần chợ Đà Lạt (SĐT: 09xx xxx xxx - *thay số thật*).\n" +
-                        "- **Dịch vụ Thuê xe Đà Lạt:** Đường Bùi Thị Xuân (SĐT: 08xx xxx xxx - *thay số thật*).\n" +
-                        "- Nhiều cửa hàng trên đường **Phan Bội Châu**.\n\n" +
+                        "- **Thuê xe máy Hoàng Anh:** Gần chợ Đà Lạt (SĐT: 02633 99 78 73).\n" +
+                        "- **Dịch vụ Thuê xe Đà Lạt:** Đường Bùi Thị Xuân (SĐT: 0909 363 463).\n" +
+                        "- Nhiều cửa hàng trên đường **Phan Bội Châu** (gần chợ).\n\n" +
                         "Bạn có cần SĐT cụ thể của chỗ nào không?";
-                     // Gợi ý chips sau khi trả lời
                     chips = [
                         { text: "Lấy SĐT Hoàng Anh" },
                         { text: "Lấy SĐT Bùi Thị Xuân" },
                         { text: "📅 Lịch trình du lịch" }
                     ];
                 }
-                // === KẾT THÚC LOGIC MỚI ===
-                
                 else if (query.includes("2 ngày 1 đêm") || query.includes("2n1đ")) {
-                    responseText = 
+                    responseText =
                         "📅 Lịch trình 2 ngày 1 đêm:\n" +
                         "Ngày 1: Sáng Langbiang, trưa cơm lam gà nướng, chiều hồ Xuân Hương – chợ đêm.\n" +
                         "Ngày 2: Sáng Thác Datanla, trưa đặc sản Đà Lạt, chiều café view đẹp.";
-                } 
-                
+                }
                 else if (query.includes("3 ngày 2 đêm") || query.includes("3n2đ")) {
-                    responseText = 
+                    responseText =
                         "📅 Lịch trình 3 ngày 2 đêm:\n" +
                         "Ngày 1: Quảng trường Lâm Viên, Hồ Xuân Hương, chợ đêm.\n" +
                         "Ngày 2: Langbiang – Thác Datanla – Thiền viện Trúc Lâm.\n" +
                         "Ngày 3: Đồi chè Cầu Đất, café Mê Linh, mua sắm đặc sản.";
-                } 
-                
+                }
                 else if (query.includes("4 ngày 3 đêm") || query.includes("4n3đ")) {
-                    responseText = 
+                    responseText =
                         "📅 Lịch trình 4 ngày 3 đêm:\n" +
                         "Ngày 1: Quảng trường Lâm Viên, Hồ Xuân Hương, chợ đêm.\n" +
                         "Ngày 2: Langbiang – Thác Datanla – Thiền viện Trúc Lâm.\n" +
                         "Ngày 3: Đồi chè Cầu Đất – Làng Cù Lần – Thung lũng Tình Yêu.\n" +
                         "Ngày 4: Tham quan vườn hoa, mua sắm đặc sản, café chill.";
-                } 
-                
+                }
                 else if (query.includes("địa điểm") || query.includes("chơi") || query.includes("check-in")) {
-                    responseText = 
+                    responseText =
                         "📍 Địa điểm nổi bật ở Đà Lạt:\n" +
                         "- Hồ Xuân Hương\n" +
                         "- Quảng trường Lâm Viên\n" +
                         "- Langbiang\n" +
                         "- Thác Datanla\n" +
                         "- Vườn hoa thành phố";
-                } 
-                
+                }
                 else if (query.includes("ăn") || query.includes("món") || query.includes("quán") || query.includes("cafe")) {
-                    responseText = 
+                    responseText =
                         "🍲 Món ăn đặc sản gợi ý:\n" +
                         "- Bánh căn Nhà Chung\n" +
                         "- Nem nướng Bà Hùng\n" +
                         "- Lẩu gà lá é Tao Ngộ\n" +
                         "- Bánh tráng nướng Nguyễn Văn Trỗi\n" +
                         "- Café Mê Linh, An Café, Horizon";
-                } 
-                
+                }
                 else if (query.includes("giờ mở cửa") || query.includes("mấy giờ") || query.includes("open")) {
-                    responseText = 
+                    responseText =
                         "⏰ Giờ mở cửa tham khảo:\n" +
                         "- Langbiang: 7h – 17h\n" +
                         "- Thác Datanla: 7h – 17h\n" +
                         "- Vườn hoa thành phố: 7h – 18h\n" +
                         "- Chợ đêm Đà Lạt: từ 17h đến khuya";
-                } 
-                
+                }
                 else {
                     responseText = "🤔 Bạn muốn biết về địa điểm, món ăn, giờ mở cửa, lịch trình hay giá vé?";
                 }
@@ -442,16 +428,57 @@ app.post("/webhook", (req, res) => {
                 }
                 break;
             }
-            
+            // --- KẾT THÚC CÁC CASE KHÁC ---
+
             // ===================================
             // SỬA LỖI: DEFAULT WELCOME/FALLBACK
             // ===================================
             case "Default Welcome Intent":
             case "Default Fallback Intent":
-                responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
-                chips = mainChips; // Gửi 5 chips chính (bao gồm chỗ ở và xe máy)
+                // === THÊM KIỂM TRA KEYWORD CHO CHỖ Ở ===
+                if (q.includes("homestay") || q.includes("chỗ ở") || q.includes("nghỉ ngơi")) {
+                    // Chạy lại logic homestay từ case "find_place"
+                    if (q.includes("homestay") && q.includes("trung tâm")) {
+                         responseText =
+                            "🏡 Homestay gần trung tâm:\n" +
+                            "- Dalat Lacasa - 59 Nam Kỳ Khởi Nghĩa\n" +
+                            "- The Art - 30 Trần Bình Trọng\n" +
+                            "- Bonjour Homestay - 15 Nam Hồ";
+                    } else if (q.includes("view đồi núi")) { // Bắt "Homestay view đồi núi"
+                         responseText =
+                            "🏡 Homestay view đồi núi đẹp:\n" +
+                            "- The Wilder-nest - Hồ Tuyền Lâm\n" +
+                            "- Hai Ả Homestay - Đồi Đa Phú\n" +
+                            "- The Kupid - Đồi Robin";
+                    } else if (q.includes("homestay")) { // Bắt "homestay" chung
+                         responseText =
+                            "🏡 Homestay đẹp & giá hợp lý:\n" +
+                            "- The Wilder-nest - Hồ Tuyền Lâm\n" +
+                            "- Tre's House - Trần Hưng Đạo\n" +
+                            "- LengKeng Homestay - Làng hoa Vạn Thành";
+                    } else { // Bắt "chỗ ở", "nghỉ ngơi" chung -> Trả lời địa điểm nổi bật như logic gốc
+                         responseText =
+                            "📍 Một số địa điểm nổi bật:\n" +
+                            "✨ Quảng trường Lâm Viên\n" +
+                            "🌊 Hồ Xuân Hương\n" +
+                            "⛰️ Núi Langbiang\n" +
+                            "🌺 Vườn hoa TP\n" +
+                            "🏞️ Thác Datanla";
+                    }
+                    // Dùng chips mặc định sau khi trả lời về chỗ ở
+                    chips = [
+                        { text: "📍 Địa điểm nổi bật" }, { text: "🍲 Món ăn đặc sản" },
+                        { text: "📅 Lịch trình du lịch" }, { text: "🛌 Chỗ ở giá rẻ" },
+                        { text: "🛵 Thuê xe máy" }
+                    ];
+                }
+                // === KẾT THÚC KIỂM TRA KEYWORD ===
+                else {
+                    // Nếu không phải keyword chỗ ở, trả lời mặc định
+                    responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
+                    chips = mainChips; // Gửi 5 chips chính
+                }
                 break;
-            // ... (Giữ nguyên các case khác) ...
         }
 
         res.json(createResponseWithChips(responseText, chips));

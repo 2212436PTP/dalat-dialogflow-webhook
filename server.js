@@ -85,8 +85,77 @@ app.post("/webhook", (req, res) => {
         // XỬ LÝ CÁC CHIPS CỤ THỂ TRƯỚC KHI VÀO INTENT
         // ======================
         
+        // ======================
+        // XỬ LÝ CÁC CHIPS CON CỤ THỂ
+        // ======================
+        
+        // Chips về món ăn cụ thể
+        if (q.includes("bánh căn")) {
+            responseText = 
+                "🥞 **Bánh căn ngon nhất Đà Lạt:**\n\n" +
+                "🏆 **Bánh căn Nhà Chung** - 1 Nhà Chung\n" +
+                "⭐ Đánh giá: 4.8/5 - Nổi tiếng nhất\n" +
+                "💰 Giá: 3.000đ/chiếc\n\n" +
+                "🥈 **Bánh căn Lệ** - 27/44 Yersin\n" +
+                "⭐ Đánh giá: 4.6/5 - Giá rẻ\n" +
+                "💰 Giá: 2.500đ/chiếc\n\n" +
+                "📍 **Cách đi:** Cả 2 quán đều gần chợ trung tâm";
+            chips = [
+                { text: "Địa chỉ cụ thể" },
+                { text: "Giá cả" },
+                { text: "Lẩu gà lá é" }
+            ];
+        }
+        else if (q.includes("lẩu gà lá é")) {
+            responseText = 
+                "🍲 **Lẩu gà lá é đặc sản:**\n\n" +
+                "🏆 **Lẩu gà lá é Tao Ngộ** - 27 Lê Đại Hành\n" +
+                "⭐ Nổi tiếng nhất, vị đậm đà\n" +
+                "💰 Giá: 150.000đ/nồi (2-3 người)\n\n" +
+                "🥈 **Lẩu gà lá é Lâm Ký** - 2 Hoàng Văn Thụ\n" +
+                "⭐ Không gian rộng rãi\n" +
+                "💰 Giá: 140.000đ/nồi\n\n" +
+                "🌿 **Đặc biệt:** Lá é có tác dụng làm thơm thịt gà";
+            chips = [
+                { text: "Địa chỉ cụ thể" },
+                { text: "Nem nướng" },
+                { text: "Bánh căn" }
+            ];
+        }
+        else if (q.includes("nem nướng")) {
+            responseText = 
+                "🥗 **Nem nướng Đà Lạt:**\n\n" +
+                "🏆 **Nem nướng Bà Hùng** - 328 Phan Đình Phùng\n" +
+                "⭐ Lâu đời nhất, gia truyền\n" +
+                "💰 Giá: 25.000đ/phần\n\n" +
+                "🥈 **Nem nướng Dũng Lộc** - 254 Phan Đình Phùng\n" +
+                "⭐ Nem to, nhiều rau sống\n" +
+                "💰 Giá: 23.000đ/phần\n\n" +
+                "🥬 **Kèm theo:** Bánh tráng, rau sống, nước chấm";
+            chips = [
+                { text: "Địa chỉ cụ thể" },
+                { text: "Bánh tráng nướng" },
+                { text: "Lẩu gà lá é" }
+            ];
+        }
+        else if (q.includes("bánh tráng nướng")) {
+            responseText = 
+                "🥮 **Bánh tráng nướng Đà Lạt:**\n\n" +
+                "🏆 **Dì Đinh** - 26 Hoàng Diệu\n" +
+                "⭐ Nổi tiếng nhất, đông khách\n" +
+                "💰 Giá: 8.000đ - 12.000đ/chiếc\n\n" +
+                "🥈 **Quán 112** - 112 Nguyễn Văn Trỗi\n" +
+                "⭐ Ít đông hơn, vị ngon\n" +
+                "💰 Giá: 7.000đ - 10.000đ/chiếc\n\n" +
+                "🔥 **Đặc biệt:** Nướng than hoa, có trứng + pate";
+            chips = [
+                { text: "Địa chỉ cụ thể" },
+                { text: "Giá cả" },
+                { text: "Nem nướng" }
+            ];
+        }
         // Xử lý riêng cho các chips phổ biến
-        if (q.includes("món ăn đặc sản") || q === "🍲 món ăn đặc sản") {
+        else if (q.includes("món ăn đặc sản") || q === "🍲 món ăn đặc sản") {
             responseText = 
                 "🍲 Món ăn đặc sản Đà Lạt nổi tiếng:\n\n" +
                 "🥞 **Bánh căn** - Bánh căn Nhà Chung (1 Nhà Chung)\n" +
@@ -100,6 +169,66 @@ app.post("/webhook", (req, res) => {
                 { text: "Lẩu gà lá é" },
                 { text: "Nem nướng" },
                 { text: "Bánh tráng nướng" }
+            ];
+        }
+        // Chips về thuê xe máy cụ thể
+        else if (q.includes("giá thuê xe")) {
+            responseText = 
+                "💰 **Bảng giá thuê xe máy Đà Lạt:**\n\n" +
+                "🏍️ **Xe số (Wave, Sirius):**\n" +
+                "• 1 ngày: 100k-120k\n" +
+                "• 3 ngày: 280k-320k\n" +
+                "• 1 tuần: 600k-700k\n\n" +
+                "🛵 **Xe tay ga (Vision, Lead):**\n" +
+                "• 1 ngày: 130k-150k\n" +
+                "• 3 ngày: 350k-400k\n" +
+                "• 1 tuần: 800k-900k\n\n" +
+                "⛽ **Xăng:** ~25k/lít\n" +
+                "🛡️ **Bảo hiểm:** +20k/ngày (tuỳ chọn)";
+            chips = [
+                { text: "Địa chỉ cụ thể" },
+                { text: "Thủ tục thuê xe" },
+                { text: "Lưu ý quan trọng" }
+            ];
+        }
+        else if (q.includes("địa chỉ cụ thể") || q.includes("địa chỉ thuê xe")) {
+            responseText = 
+                "📍 **Địa chỉ thuê xe máy cụ thể:**\n\n" +
+                "🏪 **Minh Thư Motor**\n" +
+                "📍 22 Bùi Thị Xuân (cách chợ 200m)\n" +
+                "📞 0263.3822.892\n" +
+                "⏰ 7:00 - 21:00\n\n" +
+                "🏪 **Thuê xe Hùng**\n" +
+                "📍 40 Hai Bà Trưng (gần Hồ Xuân Hương)\n" +
+                "📞 0913.456.789\n" +
+                "⏰ 6:30 - 22:00\n\n" +
+                "🏪 **Xe máy Phương Nam**\n" +
+                "📍 8 Tăng Bạt Hổ (gần bến xe)\n" +
+                "📞 0987.654.321\n" +
+                "⏰ 7:00 - 20:00";
+            chips = [
+                { text: "Giá thuê xe" },
+                { text: "Thủ tục thuê xe" },
+                { text: "Đường đi" }
+            ];
+        }
+        else if (q.includes("thủ tục thuê xe")) {
+            responseText = 
+                "📋 **Thủ tục thuê xe máy:**\n\n" +
+                "📄 **Giấy tờ cần thiết:**\n" +
+                "• CMND/CCCD (bản gốc)\n" +
+                "• GPLX A1 hoặc A2 (bản gốc)\n" +
+                "• Đặt cọc: 1-2 triệu VNĐ\n\n" +
+                "⚠️ **Lưu ý quan trọng:**\n" +
+                "• Kiểm tra xe trước khi nhận\n" +
+                "• Chụp ảnh vết xước (nếu có)\n" +
+                "• Hỏi số điện thoại hỗ trợ\n" +
+                "• Đổ đầy bình xăng khi trả\n\n" +
+                "🕐 **Giờ nhận/trả:** Thường 7:00-21:00";
+            chips = [
+                { text: "Giá thuê xe" },
+                { text: "Địa chỉ cụ thể" },
+                { text: "Tips lái xe" }
             ];
         }
         else if (q.includes("thuê xe máy") || q === "🛵 thuê xe máy") {
@@ -117,6 +246,77 @@ app.post("/webhook", (req, res) => {
                 { text: "Giá thuê xe" },
                 { text: "Địa chỉ cụ thể" },
                 { text: "Thủ tục thuê xe" }
+            ];
+        }
+        // Chips về chỗ ở cụ thể
+        else if (q.includes("giá dưới 500k") || q.includes("dưới 500k")) {
+            responseText = 
+                "💰 **Chỗ ở dưới 500k/đêm:**\n\n" +
+                "🏡 **Homestay giá rẻ (200k-400k):**\n" +
+                "• **Tre's House** - Trần Hưng Đạo (350k)\n" +
+                "• **Mai Villa** - 1/1 Mai Anh Đào (320k)\n" +
+                "• **Dalat Backpackers** - 31 Trương Công Định (280k)\n\n" +
+                "🏨 **Khách sạn bình dân (400k-480k):**\n" +
+                "• **Green Hotel** - 151 Phan Đình Phùng (450k)\n" +
+                "• **Khách sạn Ngọc Lan** - Nguyễn Chí Thanh (420k)\n\n" +
+                "⭐ Tất cả đều có WiFi, nước nóng, gần trung tâm";
+            chips = [
+                { text: "Homestay gần trung tâm" },
+                { text: "Khách sạn view đẹp" },
+                { text: "500k - 1 triệu" }
+            ];
+        }
+        else if (q.includes("homestay gần trung tâm")) {
+            responseText = 
+                "🏡 **Homestay gần trung tâm Đà Lạt:**\n\n" +
+                "🏆 **Dalat Lacasa** - 59 Nam Kỳ Khởi Nghĩa\n" +
+                "⭐ Cách chợ 300m, đẹp, sạch\n" +
+                "💰 Giá: 600k-800k/đêm\n\n" +
+                "🥈 **The Art** - 30 Trần Bình Trọng\n" +
+                "⭐ Thiết kế nghệ thuật, Instagram\n" +
+                "💰 Giá: 550k-750k/đêm\n\n" +
+                "🥉 **Bonjour Homestay** - 15 Nam Hồ\n" +
+                "⭐ Phong cách Pháp, view đẹp\n" +
+                "💰 Giá: 500k-700k/đêm";
+            chips = [
+                { text: "Giá dưới 500k" },
+                { text: "Homestay view đồi núi" },
+                { text: "Khách sạn view đẹp" }
+            ];
+        }
+        else if (q.includes("khách sạn view đẹp")) {
+            responseText = 
+                "🏨 **Khách sạn view đẹp Đà Lạt:**\n\n" +
+                "🏆 **Dalat Palace Heritage** - 12 Trần Phú\n" +
+                "⭐ View hồ Xuân Hương tuyệt đẹp\n" +
+                "💰 Giá: 1.2tr-2tr/đêm\n\n" +
+                "🥈 **Ana Mandara Villas** - Lê Lai\n" +
+                "⭐ Villa riêng, view núi đồi\n" +
+                "💰 Giá: 2.5tr-4tr/đêm\n\n" +
+                "🥉 **Green Hotel** - 151 Phan Đình Phùng\n" +
+                "⭐ View thành phố, giá hợp lý\n" +
+                "💰 Giá: 450k-650k/đêm";
+            chips = [
+                { text: "Giá dưới 500k" },
+                { text: "500k - 1 triệu" },
+                { text: "Homestay gần trung tâm" }
+            ];
+        }
+        else if (q.includes("500k - 1 triệu") || q.includes("500k-1tr")) {
+            responseText = 
+                "💎 **Chỗ ở 500k - 1 triệu/đêm:**\n\n" +
+                "🏡 **Homestay cao cấp:**\n" +
+                "• **The Art** - 30 Trần Bình Trọng (750k)\n" +
+                "• **Dalat Lacasa** - 59 Nam Kỳ Khởi Nghĩa (800k)\n" +
+                "• **Bonjour Homestay** - 15 Nam Hồ (650k)\n\n" +
+                "🏨 **Khách sạn 3-4 sao:**\n" +
+                "• **Green Hotel** - 151 Phan Đình Phùng (550k)\n" +
+                "• **Saigon Dalat Hotel** - 6 Hoa Sen (850k)\n" +
+                "• **Villa Pink House** - Bùi Thị Xuân (700k)";
+            chips = [
+                { text: "Homestay view đồi núi" },
+                { text: "Khách sạn view đẹp" },
+                { text: "Trên 1 triệu" }
             ];
         }
         else if (q.includes("chỗ ở giá rẻ") || q === "🛌 chỗ ở giá rẻ" || q.includes("homestay giá rẻ")) {
@@ -505,53 +705,11 @@ app.post("/webhook", (req, res) => {
             // ===================================
             case "Default Welcome Intent":
             case "Default Fallback Intent":
-                // Xử lý các chips cụ thể trong fallback
-                if (q.includes("món ăn đặc sản")) {
-                    responseText = 
-                        "🍲 Món ăn đặc sản Đà Lạt nổi tiếng:\n\n" +
-                        "🥞 **Bánh căn** - Bánh căn Nhà Chung (1 Nhà Chung)\n" +
-                        "🍲 **Lẩu gà lá é** - Tao Ngộ (27 Lê Đại Hành)\n" +
-                        "🥗 **Nem nướng** - Bà Hùng (328 Phan Đình Phùng)\n" +
-                        "🥮 **Bánh tráng nướng** - Dì Đinh (26 Hoàng Diệu)\n" +
-                        "🍦 **Kem bơ** - Thanh Thảo (76 Nguyễn Văn Trỗi)";
-                    chips = [
-                        { text: "Bánh căn" },
-                        { text: "Lẩu gà lá é" },
-                        { text: "Nem nướng" }
-                    ];
-                }
-                else if (q.includes("thuê xe máy")) {
-                    responseText = 
-                        "🛵 **Dịch vụ thuê xe máy ở Đà Lạt:**\n\n" +
-                        "🏪 **Minh Thư Motor** - 22 Bùi Thị Xuân\n" +
-                        "💰 Giá: 120.000đ - 150.000đ/ngày\n\n" +
-                        "🏪 **Thuê xe Hùng** - 40 Hai Bà Trưng\n" +
-                        "💰 Giá: 100.000đ - 130.000đ/ngày\n\n" +
-                        "⚠️ **Lưu ý:** Cần GPLX và đặt cọc 1-2 triệu";
-                    chips = [
-                        { text: "Giá thuê xe" },
-                        { text: "Thủ tục thuê xe" },
-                        { text: "Địa chỉ cụ thể" }
-                    ];
-                }
-                else if (q.includes("chỗ ở giá rẻ")) {
-                    responseText = 
-                        "🛌 **Chỗ ở giá rẻ ở Đà Lạt:**\n\n" +
-                        "🏡 **Homestay giá tốt (300k-500k/đêm):**\n" +
-                        "- Tre's House - Trần Hưng Đạo\n" +
-                        "- Dalat Backpackers - 31 Trương Công Định\n" +
-                        "- Mai Villa - 1/1 Mai Anh Đào\n\n" +
-                        "🏨 **Khách sạn bình dân (400k-600k/đêm):**\n" +
-                        "- Khách sạn Ngọc Lan - Nguyễn Chí Thanh\n" +
-                        "- Green Hotel - 151 Phan Đình Phùng";
-                    chips = [
-                        { text: "Homestay gần trung tâm" },
-                        { text: "Khách sạn view đẹp" },
-                        { text: "Giá dưới 500k" }
-                    ];
-                }
+                // Sử dụng chung logic xử lý chips với phần trên
+                // Không cần viết lại, sẽ được xử lý ở phần "XỬ LÝ CÁC CHIPS CỤ THỂ"
+                
                 // === THÊM KIỂM TRA KEYWORD CHO CHỖ Ở ===
-                else if (q.includes("homestay") || q.includes("chỗ ở") || q.includes("nghỉ ngơi")) {
+                if (q.includes("homestay") || q.includes("chỗ ở") || q.includes("nghỉ ngơi")) {
                     // Chạy lại logic homestay từ case "find_place"
                     if (q.includes("homestay") && q.includes("trung tâm")) {
                          responseText =

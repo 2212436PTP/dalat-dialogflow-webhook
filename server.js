@@ -73,6 +73,67 @@ app.post("/webhook", (req, res) => {
         ];
 
         // ======================
+        // XỬ LÝ CÁC CHIPS CỤ THỂ TRƯỚC KHI VÀO INTENT
+        // ======================
+        
+        // Xử lý riêng cho các chips phổ biến
+        if (q.includes("món ăn đặc sản") || q === "🍲 món ăn đặc sản") {
+            responseText = 
+                "🍲 Món ăn đặc sản Đà Lạt nổi tiếng:\n\n" +
+                "🥞 **Bánh căn** - Bánh căn Nhà Chung (1 Nhà Chung)\n" +
+                "🍲 **Lẩu gà lá é** - Tao Ngộ (27 Lê Đại Hành)\n" +
+                "🥗 **Nem nướng** - Bà Hùng (328 Phan Đình Phùng)\n" +
+                "🥮 **Bánh tráng nướng** - Dì Đinh (26 Hoàng Diệu)\n" +
+                "🍦 **Kem bơ** - Thanh Thảo (76 Nguyễn Văn Trỗi)\n" +
+                "🥛 **Sữa đậu nành nóng** - Quán Hoa Sữa (gần chợ đêm)";
+            chips = [
+                { text: "Bánh căn" },
+                { text: "Lẩu gà lá é" },
+                { text: "Nem nướng" },
+                { text: "Bánh tráng nướng" }
+            ];
+        }
+        else if (q.includes("thuê xe máy") || q === "🛵 thuê xe máy") {
+            responseText = 
+                "🛵 **Dịch vụ thuê xe máy ở Đà Lạt:**\n\n" +
+                "🏪 **Minh Thư Motor** - 22 Bùi Thị Xuân (gần chợ)\n" +
+                "📞 Hotline: 0263.3822.892\n" +
+                "💰 Giá: 120.000đ - 150.000đ/ngày\n\n" +
+                "🏪 **Thuê xe Hùng** - 40 Hai Bà Trưng\n" +
+                "💰 Giá: 100.000đ - 130.000đ/ngày\n\n" +
+                "🏪 **Xe máy Phương Nam** - 8 Tăng Bạt Hổ\n" +
+                "💰 Giá: 110.000đ - 140.000đ/ngày\n\n" +
+                "⚠️ **Lưu ý:** Cần GPLX và đặt cọc 1-2 triệu";
+            chips = [
+                { text: "Giá thuê xe" },
+                { text: "Địa chỉ cụ thể" },
+                { text: "Thủ tục thuê xe" }
+            ];
+        }
+        else if (q.includes("chỗ ở giá rẻ") || q === "🛌 chỗ ở giá rẻ" || q.includes("homestay giá rẻ")) {
+            responseText = 
+                "🛌 **Chỗ ở giá rẻ ở Đà Lạt:**\n\n" +
+                "🏡 **Homestay giá tốt (300k-500k/đêm):**\n" +
+                "- Tre's House - Trần Hưng Đạo\n" +
+                "- Dalat Backpackers - 31 Trương Công Định\n" +
+                "- Mai Villa - 1/1 Mai Anh Đào\n\n" +
+                "🏨 **Khách sạn bình dân (400k-600k/đêm):**\n" +
+                "- Khách sạn Ngọc Lan - Nguyễn Chí Thanh\n" +
+                "- Green Hotel - 151 Phan Đình Phùng\n" +
+                "- Dalat Palace Heritage - 12 Trần Phú";
+            chips = [
+                { text: "Homestay gần trung tâm" },
+                { text: "Khách sạn view đẹp" },
+                { text: "Giá dưới 500k" }
+            ];
+        }
+        
+        // Nếu đã xử lý chips, return luôn không cần vào switch case
+        if (q.includes("món ăn đặc sản") || q.includes("thuê xe máy") || q.includes("chỗ ở giá rẻ")) {
+            return res.json(createResponseWithChips(responseText, chips));
+        }
+
+        // ======================
         // Intent chính
         // ======================
         switch (intent) {
@@ -435,8 +496,53 @@ app.post("/webhook", (req, res) => {
             // ===================================
             case "Default Welcome Intent":
             case "Default Fallback Intent":
+                // Xử lý các chips cụ thể trong fallback
+                if (q.includes("món ăn đặc sản")) {
+                    responseText = 
+                        "🍲 Món ăn đặc sản Đà Lạt nổi tiếng:\n\n" +
+                        "🥞 **Bánh căn** - Bánh căn Nhà Chung (1 Nhà Chung)\n" +
+                        "🍲 **Lẩu gà lá é** - Tao Ngộ (27 Lê Đại Hành)\n" +
+                        "🥗 **Nem nướng** - Bà Hùng (328 Phan Đình Phùng)\n" +
+                        "🥮 **Bánh tráng nướng** - Dì Đinh (26 Hoàng Diệu)\n" +
+                        "🍦 **Kem bơ** - Thanh Thảo (76 Nguyễn Văn Trỗi)";
+                    chips = [
+                        { text: "Bánh căn" },
+                        { text: "Lẩu gà lá é" },
+                        { text: "Nem nướng" }
+                    ];
+                }
+                else if (q.includes("thuê xe máy")) {
+                    responseText = 
+                        "🛵 **Dịch vụ thuê xe máy ở Đà Lạt:**\n\n" +
+                        "🏪 **Minh Thư Motor** - 22 Bùi Thị Xuân\n" +
+                        "💰 Giá: 120.000đ - 150.000đ/ngày\n\n" +
+                        "🏪 **Thuê xe Hùng** - 40 Hai Bà Trưng\n" +
+                        "💰 Giá: 100.000đ - 130.000đ/ngày\n\n" +
+                        "⚠️ **Lưu ý:** Cần GPLX và đặt cọc 1-2 triệu";
+                    chips = [
+                        { text: "Giá thuê xe" },
+                        { text: "Thủ tục thuê xe" },
+                        { text: "Địa chỉ cụ thể" }
+                    ];
+                }
+                else if (q.includes("chỗ ở giá rẻ")) {
+                    responseText = 
+                        "🛌 **Chỗ ở giá rẻ ở Đà Lạt:**\n\n" +
+                        "🏡 **Homestay giá tốt (300k-500k/đêm):**\n" +
+                        "- Tre's House - Trần Hưng Đạo\n" +
+                        "- Dalat Backpackers - 31 Trương Công Định\n" +
+                        "- Mai Villa - 1/1 Mai Anh Đào\n\n" +
+                        "🏨 **Khách sạn bình dân (400k-600k/đêm):**\n" +
+                        "- Khách sạn Ngọc Lan - Nguyễn Chí Thanh\n" +
+                        "- Green Hotel - 151 Phan Đình Phùng";
+                    chips = [
+                        { text: "Homestay gần trung tâm" },
+                        { text: "Khách sạn view đẹp" },
+                        { text: "Giá dưới 500k" }
+                    ];
+                }
                 // === THÊM KIỂM TRA KEYWORD CHO CHỖ Ở ===
-                if (q.includes("homestay") || q.includes("chỗ ở") || q.includes("nghỉ ngơi")) {
+                else if (q.includes("homestay") || q.includes("chỗ ở") || q.includes("nghỉ ngơi")) {
                     // Chạy lại logic homestay từ case "find_place"
                     if (q.includes("homestay") && q.includes("trung tâm")) {
                          responseText =
@@ -475,7 +581,7 @@ app.post("/webhook", (req, res) => {
                 // === KẾT THÚC KIỂM TRA KEYWORD ===
                 else {
                     // Nếu không phải keyword chỗ ở, trả lời mặc định
-                    responseText = "Minh là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
+                    responseText = "Mình là Chatbot du lịch Đà Lạt, có thể giúp bạn tìm địa điểm, món ăn và lịch trình. Bạn muốn hỏi về gì?";
                     chips = mainChips; // Gửi 5 chips chính
                 }
                 break;

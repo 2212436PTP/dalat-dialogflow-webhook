@@ -101,9 +101,9 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 2.500đ/chiếc\n\n" +
                 "📍 **Cách đi:** Cả 2 quán đều gần chợ trung tâm";
             chips = [
-                { text: "Địa chỉ cụ thể" },
-                { text: "Giá cả" },
-                { text: "Lẩu gà lá é" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🛌 Chỗ ở giá rẻ" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         else if (q.includes("lẩu gà lá é")) {
@@ -117,9 +117,9 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 140.000đ/nồi\n\n" +
                 "🌿 **Đặc biệt:** Lá é có tác dụng làm thơm thịt gà";
             chips = [
-                { text: "Địa chỉ cụ thể" },
-                { text: "Nem nướng" },
-                { text: "Bánh căn" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🛌 Chỗ ở giá rẻ" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         else if (q.includes("nem nướng")) {
@@ -133,9 +133,9 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 23.000đ/phần\n\n" +
                 "🥬 **Kèm theo:** Bánh tráng, rau sống, nước chấm";
             chips = [
-                { text: "Địa chỉ cụ thể" },
-                { text: "Bánh tráng nướng" },
-                { text: "Lẩu gà lá é" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🛌 Chỗ ở giá rẻ" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         else if (q.includes("bánh tráng nướng")) {
@@ -149,9 +149,9 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 7.000đ - 10.000đ/chiếc\n\n" +
                 "🔥 **Đặc biệt:** Nướng than hoa, có trứng + pate";
             chips = [
-                { text: "Địa chỉ cụ thể" },
-                { text: "Giá cả" },
-                { text: "Nem nướng" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🛌 Chỗ ở giá rẻ" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         // Xử lý riêng cho các chips phổ biến
@@ -165,10 +165,9 @@ app.post("/webhook", (req, res) => {
                 "🍦 **Kem bơ** - Thanh Thảo (76 Nguyễn Văn Trỗi)\n" +
                 "🥛 **Sữa đậu nành nóng** - Quán Hoa Sữa (gần chợ đêm)";
             chips = [
-                { text: "Bánh căn" },
-                { text: "Lẩu gà lá é" },
-                { text: "Nem nướng" },
-                { text: "Bánh tráng nướng" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🛌 Chỗ ở giá rẻ" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         // Chips về thuê xe máy cụ thể

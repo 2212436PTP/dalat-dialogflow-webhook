@@ -358,7 +358,11 @@ app.post("/webhook", (req, res) => {
         }
         
         // Nếu đã xử lý chips, return luôn không cần vào switch case
-        if (q.includes("món ăn đặc sản") || q.includes("thuê xe máy") || q.includes("chỗ ở giá rẻ")) {
+        if (q.includes("món ăn đặc sản") || q.includes("thuê xe máy") || q.includes("chỗ ở giá rẻ") || 
+            q.includes("bánh căn") || q.includes("lẩu gà lá é") || q.includes("nem nướng") || q.includes("bánh tráng nướng") ||
+            q.includes("giá dưới 500k") || q.includes("homestay gần trung tâm") || q.includes("khách sạn view đẹp") || 
+            q.includes("xa trung tâm") || q.includes("500k - 1 triệu") ||
+            q.includes("giá thuê xe") || q.includes("địa chỉ cụ thể") || q.includes("thủ tục thuê xe")) {
             return res.json(createResponseWithChips(responseText, chips));
         }
 

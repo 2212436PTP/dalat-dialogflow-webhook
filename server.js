@@ -185,9 +185,9 @@ app.post("/webhook", (req, res) => {
                 "⛽ **Xăng:** ~25k/lít\n" +
                 "🛡️ **Bảo hiểm:** +20k/ngày (tuỳ chọn)";
             chips = [
-                { text: "Địa chỉ cụ thể" },
-                { text: "Thủ tục thuê xe" },
-                { text: "Lưu ý quan trọng" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🍲 Món ăn đặc sản" },
+                { text: "🛌 Chỗ ở giá rẻ" }
             ];
         }
         else if (q.includes("địa chỉ cụ thể") || q.includes("địa chỉ thuê xe")) {
@@ -206,9 +206,9 @@ app.post("/webhook", (req, res) => {
                 "📞 0987.654.321\n" +
                 "⏰ 7:00 - 20:00";
             chips = [
-                { text: "Giá thuê xe" },
-                { text: "Thủ tục thuê xe" },
-                { text: "Đường đi" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🍲 Món ăn đặc sản" },
+                { text: "🛌 Chỗ ở giá rẻ" }
             ];
         }
         else if (q.includes("thủ tục thuê xe")) {
@@ -225,9 +225,9 @@ app.post("/webhook", (req, res) => {
                 "• Đổ đầy bình xăng khi trả\n\n" +
                 "🕐 **Giờ nhận/trả:** Thường 7:00-21:00";
             chips = [
-                { text: "Giá thuê xe" },
-                { text: "Địa chỉ cụ thể" },
-                { text: "Tips lái xe" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🍲 Món ăn đặc sản" },
+                { text: "🛌 Chỗ ở giá rẻ" }
             ];
         }
         else if (q.includes("thuê xe máy") || q === "🛵 thuê xe máy") {
@@ -242,9 +242,9 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 110.000đ - 140.000đ/ngày\n\n" +
                 "⚠️ **Lưu ý:** Cần GPLX và đặt cọc 1-2 triệu";
             chips = [
-                { text: "Giá thuê xe" },
-                { text: "Địa chỉ cụ thể" },
-                { text: "Thủ tục thuê xe" }
+                { text: "📍 Địa điểm nổi bật" },
+                { text: "🍲 Món ăn đặc sản" },
+                { text: "🛌 Chỗ ở giá rẻ" }
             ];
         }
         // Chips về chỗ ở cụ thể
@@ -279,8 +279,8 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 500k-700k/đêm";
             chips = [
                 { text: "Giá dưới 500k" },
-                { text: "Homestay view đồi núi" },
-                { text: "Khách sạn view đẹp" }
+                { text: "Khách sạn view đẹp" },
+                { text: "Xa trung tâm" }
             ];
         }
         else if (q.includes("khách sạn view đẹp")) {
@@ -297,8 +297,8 @@ app.post("/webhook", (req, res) => {
                 "💰 Giá: 450k-650k/đêm";
             chips = [
                 { text: "Giá dưới 500k" },
-                { text: "500k - 1 triệu" },
-                { text: "Homestay gần trung tâm" }
+                { text: "Homestay gần trung tâm" },
+                { text: "Xa trung tâm" }
             ];
         }
         else if (q.includes("500k - 1 triệu") || q.includes("500k-1tr")) {
@@ -313,9 +313,30 @@ app.post("/webhook", (req, res) => {
                 "• **Saigon Dalat Hotel** - 6 Hoa Sen (850k)\n" +
                 "• **Villa Pink House** - Bùi Thị Xuân (700k)";
             chips = [
-                { text: "Homestay view đồi núi" },
                 { text: "Khách sạn view đẹp" },
-                { text: "Trên 1 triệu" }
+                { text: "Xa trung tâm" },
+                { text: "Homestay gần trung tâm" }
+            ];
+        }
+        else if (q.includes("xa trung tâm")) {
+            responseText = 
+                "🏞️ **Chỗ ở xa trung tâm - view đẹp, yên tĩnh:**\n\n" +
+                "🏡 **Homestay view núi đồi:**\n" +
+                "• **The Wilder-nest** - Hồ Tuyền Lâm (7km)\n" +
+                "⭐ View hồ tuyệt đẹp, yên tĩnh\n" +
+                "💰 Giá: 800k-1.2tr/đêm\n\n" +
+                "• **Hai Ả Homestay** - Đồi Đa Phú (5km)\n" +
+                "⭐ View toàn cảnh thành phố\n" +
+                "💰 Giá: 600k-900k/đêm\n\n" +
+                "🏨 **Resort nghỉ dưỡng:**\n" +
+                "• **Ana Mandara Villas** - Lê Lai (4km)\n" +
+                "⭐ Villa sang trọng, spa, golf\n" +
+                "💰 Giá: 2.5tr-4tr/đêm\n\n" +
+                "🚗 **Lưu ý:** Cần xe máy/ô tô để di chuyển";
+            chips = [
+                { text: "Homestay gần trung tâm" },
+                { text: "Khách sạn view đẹp" },
+                { text: "🛵 Thuê xe máy" }
             ];
         }
         else if (q.includes("chỗ ở giá rẻ") || q === "🛌 chỗ ở giá rẻ" || q.includes("homestay giá rẻ")) {
@@ -332,7 +353,7 @@ app.post("/webhook", (req, res) => {
             chips = [
                 { text: "Homestay gần trung tâm" },
                 { text: "Khách sạn view đẹp" },
-                { text: "Giá dưới 500k" }
+                { text: "Xa trung tâm" }
             ];
         }
         

@@ -41,6 +41,15 @@ app.get("/", (req, res) => {
     res.send("🚀 Webhook for Dialogflow ES is running!");
 });
 
+// Keep-alive endpoint để tránh server bị sleep
+app.get("/keep-alive", (req, res) => {
+    res.json({ 
+        status: "Server is alive", 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime() 
+    });
+});
+
 app.post("/webhook", (req, res) => {
     try {
         const intent = req.body.queryResult.intent.displayName;
@@ -595,6 +604,19 @@ app.post("/webhook", (req, res) => {
     }
 });
 
+// Tự động ping để giữ server alive (chỉ khi deploy)
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL; // Render sẽ tự set biến này
+if (RENDER_URL) {
+    setInterval(() => {
+        fetch(`${RENDER_URL}/keep-alive`)
+            .then(() => console.log("✅ Keep-alive ping sent"))
+            .catch(() => console.log("❌ Keep-alive ping failed"));
+    }, 14 * 60 * 1000); // Ping mỗi 14 phút
+}
+
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    if (RENDER_URL) {
+        console.log(`🔄 Keep-alive enabled for: ${RENDER_URL}`);
+    }
 });
